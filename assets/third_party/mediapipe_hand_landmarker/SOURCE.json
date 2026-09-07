@@ -1,0 +1,13 @@
+{
+  "name": "MediaPipe Hand Landmarker (full, float16)",
+  "author": "Google / MediaPipe",
+  "source": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
+  "source_page": "https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker",
+  "license": "Apache-2.0",
+  "license_evidence": "https://storage.googleapis.com/mediapipe-assets/Model%20Card%20Hand%20Tracking%20%28Lite_Full%29%20with%20Fairness%20Oct%202021.pdf",
+  "license_file": "LICENSE.txt",
+  "retrieved_utc": "2026-09-07",
+  "sha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "modifications": "None",
+  "redistribution_requirements": "Retain the Apache-2.0 license and applicable notices; identify modifications if made."
+}
