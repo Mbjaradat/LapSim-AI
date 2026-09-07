@@ -1,0 +1,55 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+*.egg-info/
+build/
+dist/
+.coverage*
+htmlcov/
+
+# Temporary files and Blender backups (main .blend files remain trackable)
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.blend[0-9]*
+*.blend@
+*.log
+tmp/
+temp/
+.cache/
+
+# Generated or private data; do not store distributable sources here
+recordings/
+outputs/
+generated/
+datasets/
+assets/local/
+assets/tmp/
+assets/downloads/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local.*
+config/local/
+secrets/
+credentials/
+*.pem
+*.key
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini

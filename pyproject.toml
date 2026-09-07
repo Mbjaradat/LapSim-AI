@@ -1,0 +1,10 @@
+[project]
+name = "lapsim-ai"
+version = "0.0.0"
+description = "Experimental educational and research laparoscopic simulation prototype"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+# Phase 0: no installation/build workflow yet. License metadata is pending
+# maintainer approval. Revisit supported Python versions with CV dependencies.
