@@ -1,6 +1,6 @@
 # Intended architecture
 
-Design only: no components or transport are implemented in Phase 0.
+Phase 1A implements the independent control contract, rigid trocar kinematics, and a primitive Blender scene. The full pipeline below remains the intended architecture; webcam, transport, telemetry, metrics, and assessment are not implemented. See [Phase 1A](phase1a.md) for the actual mechanics.
 
 ```mermaid
 flowchart TD

@@ -4,7 +4,9 @@ An experimental educational and research prototype for webcam-controlled laparos
 
 The intended first scenario is a simplified laparoscopic cholecystectomy environment. Eventually, a laptop webcam will track both hands and control two virtual instruments in Blender through software-enforced trocar/fulcrum constraints.
 
-**Status: Phase 0 — project foundation only.** No simulator, anatomical scene, hand tracking, or performance assessment is implemented.
+**Status: Phase 1A — rigid instrument mechanics prototype.** A reproducible Blender training box contains two independently controlled instruments, fixed trocar pivots, and a deterministic demonstration. Anatomy, hand tracking, tissue interaction, and performance assessment are not implemented.
+
+Open `blender/scenes/lapsim_ai_phase1a.blend` and press **Numpad 0** for the camera view, then **Space** to play. See [Phase 1A mechanics and verification](docs/phase1a.md) for regeneration commands, manual controls, and limitations.
 
 This project has no clinical validation, does not certify surgical competency, and does not replace supervised surgical training. Future metrics will describe simulator behavior; their relationship to surgical skill requires research and validation.
 
@@ -26,19 +28,19 @@ See [architecture](docs/architecture.md), [roadmap](docs/roadmap.md), and [devel
 | Path | Purpose |
 | --- | --- |
 | `blender/scenes/` | Distributable Blender scene files |
-| `blender/scripts/` | Future Blender integration scripts |
+| `blender/scripts/` | Scene builder, instrument rigs, demonstration, verification |
 | `src/lapsim_ai/vision/` | Future webcam and hand tracking |
-| `src/lapsim_ai/control/` | Future calibration and control mapping |
+| `src/lapsim_ai/control/` | Bounded instrument-control contract; future calibration/mapping |
 | `src/lapsim_ai/simulator/` | Future constraints and simulator logic |
 | `src/lapsim_ai/telemetry/` | Future interaction event contracts |
 | `src/lapsim_ai/scoring/` | Future descriptive performance metrics |
 | `assets/` | Original assets and separately documented third-party assets |
-| `tests/` | Future behavior and integration tests |
+| `tests/` | Control contract tests; Blender integration checks live in `blender/scripts/` |
 | `docs/` | Architecture, roadmap, setup, licensing decisions |
 
 ## Dependencies and setup
 
-Phase 0 has no third-party Python dependencies. `pyproject.toml` records provisional metadata; packaging and license metadata will be finalized later. No ML frameworks or assets are installed. See the development guide before creating a standalone Python environment. Blender uses its own bundled Python.
+Phase 1A has no third-party Python dependencies beyond the existing Blender runtime. `pyproject.toml` records provisional metadata; packaging and license metadata will be finalized later. No ML frameworks or assets are installed. See the development guide before creating a standalone Python environment. Blender uses its own bundled Python.
 
 ## Licensing and contributions
 

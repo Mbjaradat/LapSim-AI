@@ -21,7 +21,7 @@ Do not relicense third-party assets as original code. Track them in the root THI
 ## Pending approval
 
 - Confirm Apache-2.0 for original independent source and the copyright holder wording.
-- Agree on separate GPL-compatible licensing for future Blender API integration before implementation/distribution.
+- Agree on separate GPL-compatible licensing for Blender API integration before public distribution. Local Phase 1A implementation was explicitly authorized; this does not finalize a license grant.
 - Decide the license for future original scene/art assets before public release.
 
 After these decisions, add the official LICENSE text, component-specific license files/notices as needed, and matching metadata. This is a project licensing plan, not a legal opinion.

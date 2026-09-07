@@ -1,6 +1,6 @@
 # Third-party materials register
 
-No third-party code, assets, models, textures, recordings, or datasets are currently bundled. No external Python dependencies are currently declared. Blender is an external prerequisite, not redistributed in this repository.
+No third-party code, assets, models, textures, recordings, or datasets are currently bundled. No external Python dependencies are currently declared. Blender is an external prerequisite, not redistributed in this repository. Phase 1A geometry and materials are generated from Blender primitives by original project scripts; no external models, textures, or fonts are imported. The scene's eventual distribution license remains pending under docs/licensing.md.
 
 This register is separate from the proposed license for original source code. Before adding any material, record all fields below, including embedded textures, fonts, scripts, model weights, and transitive bundled components. Use one row per item or link a detailed per-item record if necessary.
 

@@ -20,7 +20,7 @@ Once a standalone interpreter is available, run from the repository root (replac
 & '.\.venv\Scripts\python.exe' -m pip --version
 ```
 
-Activation is optional; use the environment's interpreter explicitly. Phase 0 needs no package installation. `pyproject.toml` is the dependency declaration source; add only justified packages when functionality is implemented. Select a lockfile workflow and capture resolved dependencies before the first dependency-bearing release. There is no installable package or test suite yet.
+Activation is optional; use the environment's interpreter explicitly. Phase 1A needs no package installation. `pyproject.toml` is the dependency declaration source; add only justified packages when functionality is implemented. Select a lockfile workflow and capture resolved dependencies before the first dependency-bearing release. There is no installable package yet. Phase 1A tests run through Blender's existing runtime; see [phase1a.md](phase1a.md).
 
 ## Blender verification
 
