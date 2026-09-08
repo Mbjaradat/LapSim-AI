@@ -10,8 +10,10 @@ from mediapipe.tasks.python import vision
 
 if __package__:
     from .hand_state import extract_hand_state
+    from .stabilization import HandStabilizer
 else:
     from hand_state import extract_hand_state
+    from stabilization import HandStabilizer
 
 MODEL = (Path(__file__).resolve().parents[3] / "assets" / "third_party"
          / "mediapipe_hand_landmarker" / "hand_landmarker.task")
@@ -44,6 +46,11 @@ def main():
         num_hands=2,
     )
     camera = None
+    stabilizer = HandStabilizer()
+    selected = "Right"
+    print("1: select Left; 2: select Right. Hold each pose BEFORE pressing its key:")
+    print("N: neutral wrist; O: open pinch; C: closed pinch (30 consecutive samples each).")
+    print("R: reset selected hand including calibration. Q/Esc: quit.")
     try:
         with vision.HandLandmarker.create_from_options(options) as detector:
             camera = cv2.VideoCapture(0)
@@ -60,7 +67,7 @@ def main():
                 result = detector.detect_for_video(
                     mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), timestamp)
                 height, width = frame.shape[:2]
-                debug_lines = []
+                raw_states = []
                 for i, landmarks in enumerate(result.hand_landmarks):
                     points = [(int(p.x * width), int(p.y * height)) for p in landmarks]
                     for chain in CHAINS:
@@ -72,14 +79,31 @@ def main():
                     state = extract_hand_state(
                         landmarks, categories[0].category_name if categories else None,
                         mirrored_input=True)
-                    debug = (f"{state.handedness}  wrist {state.wrist[0]:.2f}, {state.wrist[1]:.2f}"
-                             f"  pinch {state.pinch_distance:.3f}" if state else "Hand: identity unavailable")
-                    debug_lines.append(debug)
+                    if state is not None:
+                        raw_states.append(state)
+                stable = stabilizer.update(raw_states, timestamp / 1000)
+                debug_lines = []
+                for state in stable.values():
+                    wrist = (f"{state.wrist[0]:.2f},{state.wrist[1]:.2f}"
+                             if state.wrist is not None else "--")
+                    pinch = f"{state.normalized_pinch:.2f}" if state.normalized_pinch is not None else "--"
+                    tracking = "tracked" if state.tracked else ("lost" if state.available else "unavailable")
+                    debug_lines.append(f"{state.handedness}: {tracking} | {state.status}")
+                    debug_lines.append(f"  wrist {wrist} | pinch {pinch} | valid {int(state.valid)}")
+                debug_lines.append(f"Selected {selected} | 1:Left 2:Right | N:neutral O:open C:closed")
+                debug_lines.append("Hold pose during sampling | R:reset selected | Q/Esc:quit")
                 # Draw last so neither the feed nor another hand's landmarks hide the text.
                 frame = draw_debug_lines(frame, debug_lines)
                 cv2.imshow("LapSim-AI hand detection - Q / Esc to exit", frame)
-                if cv2.waitKey(1) & 0xFF in (ord("q"), ord("Q"), 27):
+                key = cv2.waitKey(1) & 0xFF
+                if key in (ord("q"), ord("Q"), 27):
                     break
+                if key in (ord("1"), ord("2")):
+                    selected = "Left" if key == ord("1") else "Right"
+                elif chr(key).lower() in ("n", "o", "c"):
+                    stabilizer.calibrate(selected, {"n": "neutral", "o": "open", "c": "closed"}[chr(key).lower()])
+                elif chr(key).lower() == "r":
+                    stabilizer.reset(selected)
     finally:
         if camera is not None:
             camera.release()
