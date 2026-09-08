@@ -11,6 +11,7 @@ class HandState:
     index_fingertip: tuple[float, float]
     thumb_tip: tuple[float, float]
     pinch_distance: float
+    middle_mcp: tuple[float, float] | None = None
 
 
 def extract_hand_state(landmarks, handedness, *, mirrored_input: bool):
@@ -32,4 +33,4 @@ def extract_hand_state(landmarks, handedness, *, mirrored_input: bool):
 
     wrist, index_tip, thumb_tip = xy(0), xy(8), xy(4)
     pinch = hypot(index_tip[0] - thumb_tip[0], index_tip[1] - thumb_tip[1])
-    return HandState(handedness, wrist, index_tip, thumb_tip, pinch)
+    return HandState(handedness, wrist, index_tip, thumb_tip, pinch, xy(9))

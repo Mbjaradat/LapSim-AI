@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import time
+import sys
 
 import cv2
 import mediapipe as mp
@@ -14,6 +15,9 @@ if __package__:
 else:
     from hand_state import extract_hand_state
     from stabilization import HandStabilizer
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from lapsim_ai.control.hand_mapping import HandMapper, MappingSettings
 
 MODEL = (Path(__file__).resolve().parents[3] / "assets" / "third_party"
          / "mediapipe_hand_landmarker" / "hand_landmarker.task")
@@ -51,6 +55,7 @@ def main():
     print("1: select Left; 2: select Right. Hold each pose BEFORE pressing its key:")
     print("N: neutral wrist; O: open pinch; C: closed pinch (30 consecutive samples each).")
     print("R: reset selected hand including calibration. Q/Esc: quit.")
+    print("N also captures palm scale/orientation: face palm toward camera; hold a comfortable pose.")
     try:
         with vision.HandLandmarker.create_from_options(options) as detector:
             camera = cv2.VideoCapture(0)
@@ -82,6 +87,7 @@ def main():
                     if state is not None:
                         raw_states.append(state)
                 stable = stabilizer.update(raw_states, timestamp / 1000)
+                mapper = HandMapper(MappingSettings(image_aspect=width / height))
                 debug_lines = []
                 for state in stable.values():
                     wrist = (f"{state.wrist[0]:.2f},{state.wrist[1]:.2f}"
@@ -89,7 +95,12 @@ def main():
                     pinch = f"{state.normalized_pinch:.2f}" if state.normalized_pinch is not None else "--"
                     tracking = "tracked" if state.tracked else ("lost" if state.available else "unavailable")
                     debug_lines.append(f"{state.handedness}: {tracking} | {state.status}")
-                    debug_lines.append(f"  wrist {wrist} | pinch {pinch} | valid {int(state.valid)}")
+                    command = mapper.map(state)
+                    if command.valid:
+                        debug_lines.append(f"yaw {command.yaw:+.2f} pitch {command.pitch:+.2f} depth {command.insertion:+.2f}")
+                        debug_lines.append(f"roll {command.rotation:+.2f} jaw {command.jaw:.2f}")
+                    else:
+                        debug_lines.append(f"command invalid | wrist {wrist} | pinch {pinch}")
                 debug_lines.append(f"Selected {selected} | 1:Left 2:Right | N:neutral O:open C:closed")
                 debug_lines.append("Hold pose during sampling | R:reset selected | Q/Esc:quit")
                 # Draw last so neither the feed nor another hand's landmarks hide the text.

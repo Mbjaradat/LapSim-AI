@@ -29,6 +29,7 @@ class Calibration:
     neutral_wrist: tuple[float, float] | None = None
     pinch_open: float | None = None
     pinch_closed: float | None = None
+    neutral_palm: tuple[float, float] | None = None
 
     @property
     def ready(self):
@@ -49,6 +50,7 @@ class StableHandState:
     normalized_pinch: float | None
     calibration: Calibration
     status: str
+    middle_mcp: tuple[float, float] | None = None
 
 
 class _Hand:
@@ -96,6 +98,8 @@ class HandStabilizer:
                         "open": ("pinch_open", sampled[6]),
                         "closed": ("pinch_closed", sampled[6])}[hand.stage]
         candidate = replace(hand.calibration, **{field: value})
+        if hand.stage == "neutral":
+            candidate = replace(candidate, neutral_palm=(sampled[7] - sampled[0], sampled[8] - sampled[1]) if len(sampled) == 9 else None)
         if (candidate.pinch_open is not None and candidate.pinch_closed is not None
                 and candidate.pinch_open - candidate.pinch_closed < self.settings.minimum_pinch_span):
             hand.message = "range rejected: retry O/C"
@@ -119,14 +123,16 @@ class HandStabilizer:
             if len(matches) == 1:
                 raw = matches[0]
                 candidate = (*raw.wrist, *raw.index_fingertip, *raw.thumb_tip, raw.pinch_distance)
+                if raw.middle_mcp is not None:
+                    candidate += tuple(raw.middle_mcp)
                 if (all(isfinite(v) for v in candidate)
-                        and all(0 <= v <= 1 for v in candidate[:6])
+                        and all(0 <= v <= 1 for v in candidate[:6] + candidate[7:])
                         and 0 <= candidate[6] <= 2 ** 0.5):
                     values = candidate
             tracked = values is not None
             if tracked:
                 hand.last_seen = now
-                if hand.filtered is None:
+                if hand.filtered is None or len(hand.filtered) != len(values):
                     hand.filtered = hand.output = values
                 else:
                     hand.filtered = tuple(a + alpha * (b - a) for a, b in zip(hand.filtered, values))
@@ -156,5 +162,5 @@ class HandStabilizer:
                 side, tracked, available, tracked and cal.ready and hand.stage is None,
                 out[:2] if out else None, out[2:4] if out else None,
                 out[4:6] if out else None, out[6] if out else None,
-                pinch, cal, status)
+                pinch, cal, status, out[7:9] if out and len(out) == 9 else None)
         return result
