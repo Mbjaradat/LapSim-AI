@@ -11,10 +11,10 @@ from lapsim_ai.vision.stabilization import Calibration, StableHandState, HandSta
 from lapsim_ai.vision.hand_state import HandState
 
 
-def state(side="Right", x=.5, y=.5, scale=1, angle=0, pinch=.5):
+def state(side="Right", x=.5, y=.5, depth_scale=.7, angle=0, pinch=.5):
     return StableHandState(side, True, True, True, (x,y), (.5,.2), (.6,.2),
-                           .1, pinch, Calibration((.5,.5), .2,.01,(0,-.1)), "ready",
-                           (x + .1*scale*sin(angle), y - .1*scale*cos(angle)))
+                           .1, pinch, Calibration((.5,.5), .2,.01,(0,-.1),.7,(.1,0)), "ready",
+                           (x, y-.1), depth_scale, (.1*cos(angle), .1*sin(angle)))
 
 
 class MappingTests(unittest.TestCase):
@@ -43,13 +43,13 @@ class MappingTests(unittest.TestCase):
 
     def test_depth_roll_jaw_and_clamps(self):
         mapper = HandMapper()
-        self.assertGreater(mapper.map(state(scale=.7)).insertion, 0)
-        self.assertLess(mapper.map(state(scale=1.3)).insertion, 0)
+        self.assertGreater(mapper.map(state(depth_scale=.5)).insertion, 0)
+        self.assertLess(mapper.map(state(depth_scale=.9)).insertion, 0)
         self.assertLess(mapper.map(state(angle=.4)).rotation, 0)
         self.assertGreater(mapper.map(state(angle=-.4)).rotation, 0)
         for value in (0, 1):
             self.assertEqual(mapper.map(state(pinch=value)).jaw, value)
-        command = mapper.map(state(x=1,y=0,scale=3,angle=2,pinch=2))
+        command = mapper.map(state(x=1,y=0,depth_scale=1,angle=2,pinch=2))
         self.assertEqual((command.yaw,command.pitch,command.insertion,command.rotation,command.jaw), (1,-1,-1,-1,1))
         pose = command.to_control()
         self.assertEqual((pose.yaw,pose.pitch,pose.insertion,pose.rotation,pose.jaw), (35,-25,.12,-180,1))
@@ -57,13 +57,13 @@ class MappingTests(unittest.TestCase):
     def test_invalid_and_degenerate(self):
         mapper = HandMapper()
         for sample in (replace(state(),valid=False), replace(state(),tracked=False),
-                       replace(state(),middle_mcp=None), state(scale=0), state(x=float("nan"))):
+                       replace(state(),knuckle_line=None), replace(state(),knuckle_line=(0,0)), state(x=float("nan"))):
             command = mapper.map(sample)
             self.assertFalse(command.valid)
             self.assertIsNone(command.yaw)
             self.assertIsNone(command.to_control())
         with self.assertRaises(ValueError):
-            MappingSettings(scale_range=0)
+            MappingSettings(depth_range=0)
 
     def test_neutral_capture_and_stabilized_palm(self):
         engine = HandStabilizer(Settings(calibration_samples=3))
@@ -72,7 +72,7 @@ class MappingTests(unittest.TestCase):
             engine.calibrate("Right",stage)
             for _ in range(3):
                 t += .03
-                sample = engine.update([HandState("Right",(.5,.5),(.5,.2),(.6,.2),pinch,(.5,.4))],t)["Right"]
+                sample = engine.update([HandState("Right",(.5,.5),(.5,.2),(.6,.2),pinch,(.5,.4),.7,(.1,0))],t)["Right"]
         command = HandMapper().map(sample)
         self.assertTrue(command.valid)
         self.assertAlmostEqual(command.insertion, 0)

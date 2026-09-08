@@ -37,6 +37,7 @@ class StabilizationTests(unittest.TestCase):
 
     def test_calibration_median_direction_clamp_and_reset(self):
         engine = HandStabilizer(Settings(smoothing_seconds=0, dead_zone=0,
+                                         pinch_smoothing_seconds=0, pinch_dead_zone=0,
                                          max_step=1, max_pinch_step=1, calibration_samples=3))
         t = 0
         for stage, pinch in (("neutral", .1), ("open", .25), ("closed", .02)):

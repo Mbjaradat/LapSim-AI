@@ -26,3 +26,6 @@ SENSITIVITY = Sensitivity()
 TIMER_INTERVAL = 1 / 60
 WHEEL_DT = 0.05
 KEY_TAP_DT = 1 / 60
+
+# Absolute webcam jaw targets: full travel in 125 ms; keyboard rate is unchanged.
+WEBCAM_JAW_RATE = 8.0

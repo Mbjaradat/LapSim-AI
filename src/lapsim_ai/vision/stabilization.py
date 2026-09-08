@@ -11,16 +11,23 @@ class Settings:
     dead_zone: float = 0.002
     loss_timeout: float = 0.5
     max_step: float = 0.03  # Maximum normalized change per update, including reacquisition.
-    max_pinch_step: float = 0.1  # Maximum calibrated pinch change per update.
+    max_pinch_step: float = 0.35  # Faster jaw, still bounded during reacquisition.
+    pinch_smoothing_seconds: float = 0.04
+    pinch_dead_zone: float = 0.005  # Fraction of calibrated pinch span.
+    depth_smoothing_seconds: float = 0.10
+    depth_filter_dead_zone: float = 0.005  # Fraction of neutral palm scale.
+    depth_max_step: float = 0.03  # Fraction of neutral palm scale per update.
     calibration_samples: int = 30
     minimum_pinch_span: float = 0.005
 
     def __post_init__(self):
         values = (self.smoothing_seconds, self.dead_zone, self.loss_timeout,
-                  self.max_step, self.max_pinch_step, self.minimum_pinch_span)
+                  self.max_step, self.max_pinch_step, self.minimum_pinch_span,
+                  self.pinch_smoothing_seconds, self.pinch_dead_zone,
+                  self.depth_smoothing_seconds, self.depth_filter_dead_zone, self.depth_max_step)
         if not all(isfinite(v) for v in values) or min(values) < 0:
             raise ValueError("Settings must be finite and nonnegative")
-        if self.max_step == 0 or self.max_pinch_step == 0 or self.minimum_pinch_span == 0 or self.calibration_samples < 3:
+        if self.max_step == 0 or self.max_pinch_step == 0 or self.depth_max_step == 0 or self.minimum_pinch_span == 0 or self.calibration_samples < 3:
             raise ValueError("Positive step/span and at least three samples required")
 
 
@@ -30,6 +37,8 @@ class Calibration:
     pinch_open: float | None = None
     pinch_closed: float | None = None
     neutral_palm: tuple[float, float] | None = None
+    neutral_depth_scale: float | None = None
+    neutral_knuckles: tuple[float, float] | None = None
 
     @property
     def ready(self):
@@ -51,6 +60,8 @@ class StableHandState:
     calibration: Calibration
     status: str
     middle_mcp: tuple[float, float] | None = None
+    palm_depth_scale: float | None = None
+    knuckle_line: tuple[float, float] | None = None
 
 
 class _Hand:
@@ -99,7 +110,10 @@ class HandStabilizer:
                         "closed": ("pinch_closed", sampled[6])}[hand.stage]
         candidate = replace(hand.calibration, **{field: value})
         if hand.stage == "neutral":
-            candidate = replace(candidate, neutral_palm=(sampled[7] - sampled[0], sampled[8] - sampled[1]) if len(sampled) == 9 else None)
+            candidate = replace(candidate,
+                                neutral_palm=(sampled[7] - sampled[0], sampled[8] - sampled[1]) if len(sampled) >= 9 else None,
+                                neutral_depth_scale=sampled[9] if len(sampled) == 12 else None,
+                                neutral_knuckles=sampled[10:12] if len(sampled) == 12 else None)
         if (candidate.pinch_open is not None and candidate.pinch_closed is not None
                 and candidate.pinch_open - candidate.pinch_closed < self.settings.minimum_pinch_span):
             hand.message = "range rejected: retry O/C"
@@ -115,6 +129,8 @@ class HandStabilizer:
         self._time = now
         cfg = self.settings
         alpha = 1 if cfg.smoothing_seconds == 0 else 1 - exp(-dt / cfg.smoothing_seconds)
+        pinch_alpha = 1 if cfg.pinch_smoothing_seconds == 0 else 1 - exp(-dt / cfg.pinch_smoothing_seconds)
+        depth_alpha = 1 if cfg.depth_smoothing_seconds == 0 else 1 - exp(-dt / cfg.depth_smoothing_seconds)
         result = {}
         states = list(states)
         for side, hand in self.hands.items():
@@ -125,8 +141,12 @@ class HandStabilizer:
                 candidate = (*raw.wrist, *raw.index_fingertip, *raw.thumb_tip, raw.pinch_distance)
                 if raw.middle_mcp is not None:
                     candidate += tuple(raw.middle_mcp)
+                    if raw.palm_depth_scale is not None and raw.knuckle_line is not None:
+                        candidate += (raw.palm_depth_scale, *raw.knuckle_line)
                 if (all(isfinite(v) for v in candidate)
-                        and all(0 <= v <= 1 for v in candidate[:6] + candidate[7:])
+                        and all(0 <= v <= 1 for v in candidate[:6] + candidate[7:9])
+                        and (len(candidate) < 12 or candidate[9] > 0)
+                        and all(-1 <= v <= 1 for v in candidate[10:])
                         and 0 <= candidate[6] <= 2 ** 0.5):
                     values = candidate
             tracked = values is not None
@@ -134,17 +154,24 @@ class HandStabilizer:
                 hand.last_seen = now
                 if hand.filtered is None or len(hand.filtered) != len(values):
                     hand.filtered = hand.output = values
+                    hand.samples = []  # Do not mix incomplete/full geometry captures.
                 else:
-                    hand.filtered = tuple(a + alpha * (b - a) for a, b in zip(hand.filtered, values))
+                    hand.filtered = tuple(a + (pinch_alpha if i == 6 else depth_alpha if i == 9 else alpha) * (b - a)
+                                          for i, (a, b) in enumerate(zip(hand.filtered, values)))
                     # A continuous deadband allows accumulated small intentional motion.
                     output = []
                     for index, (old, target) in enumerate(zip(hand.output, hand.filtered)):
                         delta = target - old
                         movement = max(0, abs(delta) - cfg.dead_zone)
                         limit = cfg.max_step
+                        if index == 9:
+                            baseline = hand.calibration.neutral_depth_scale or old
+                            movement = max(0, abs(delta) - cfg.depth_filter_dead_zone * baseline)
+                            limit = cfg.depth_max_step * baseline
                         if index == 6 and hand.calibration.ready:
                             span = hand.calibration.pinch_open - hand.calibration.pinch_closed
-                            limit = min(limit, cfg.max_pinch_step * span)
+                            limit = cfg.max_pinch_step * span
+                            movement = max(0, abs(delta) - cfg.pinch_dead_zone * span)
                         output.append(old + min(limit, movement) * (1 if delta >= 0 else -1))
                     hand.output = tuple(output)
                 self._collect(hand, values)
@@ -162,5 +189,7 @@ class HandStabilizer:
                 side, tracked, available, tracked and cal.ready and hand.stage is None,
                 out[:2] if out else None, out[2:4] if out else None,
                 out[4:6] if out else None, out[6] if out else None,
-                pinch, cal, status, out[7:9] if out and len(out) == 9 else None)
+                pinch, cal, status, out[7:9] if out and len(out) >= 9 else None,
+                out[9] if out and len(out) == 12 else None,
+                out[10:12] if out and len(out) == 12 else None)
         return result

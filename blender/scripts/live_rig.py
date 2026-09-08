@@ -68,3 +68,6 @@ class LiveSession:
     def reset(self):
         self.controller.reset()
         self.rig.apply(self.controller.poses)
+
+    def update_targets(self, targets, dt):
+        self.rig.apply(self.controller.update_targets(targets, dt))

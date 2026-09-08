@@ -43,6 +43,33 @@ class LAPSIM_OT_live(bpy.types.Operator):
         except ValueError as error:
             self.report({"ERROR"}, str(error))
             return {"CANCELLED"}
+
+        self.provider = KeyboardInput()
+        self.selected = "LEFT"
+        self.mode = "Keyboard"
+        self._closed = False
+        self._wm, self._window, self._area = context.window_manager, context.window, context.area
+        self._last = time.perf_counter()
+        self._timer = self._wm.event_timer_add(TIMER_INTERVAL, window=self._window)
+        self._draw = bpy.types.SpaceView3D.draw_handler_add(self.draw_hud, (), "WINDOW", "POST_PIXEL")
+        ACTIVE = self
+        self.select_instrument(context)
+        self._wm.modal_handler_add(self)
+        return {"RUNNING_MODAL"}
+
+    def select_instrument(self, context):
+        obj = bpy.data.objects.get(f"{self.selected}_INSTRUMENT")
+        if obj:
+            for selected in list(context.selected_objects):
+                selected.select_set(False)
+            obj.select_set(True)
+            context.view_layer.objects.active = obj
+
+    def draw_hud(self):
+        if self._closed or bpy.context.area != self._area:
+            return
+        font = 0
+        blf.size(font, 16)
         if context.screen.is_animation_playing:
             bpy.ops.screen.animation_cancel(restore_frame=False)
         self.provider = KeyboardInput()
@@ -207,7 +234,7 @@ class LAPSIM_OT_live(bpy.types.Operator):
 
 class LAPSIM_OT_stop(bpy.types.Operator):
     bl_idname = "lapsim.stop"
-    bl_label = "Stop Keyboard Control"
+    bl_label = "Stop LapSim Control"
 
     def execute(self, context):
         if ACTIVE:
@@ -229,7 +256,7 @@ class LAPSIM_PT_controls(bpy.types.Panel):
         layout.label(text="Space: pause/resume | Esc: stop")
         layout.label(text="R: neutral | Tab: sensitivity")
         if ACTIVE:
-            layout.label(text=f"Keyboard / {'Paused' if ACTIVE.session.controller.paused else 'Live'}")
+            layout.label(text=f"{getattr(ACTIVE, 'mode', 'Keyboard')} / {'Paused' if ACTIVE.session.controller.paused else 'Live'}")
         for side in ("LEFT", "RIGHT"):
             box = layout.box()
             box.label(text=side)

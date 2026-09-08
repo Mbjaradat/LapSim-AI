@@ -10,15 +10,24 @@ def clamp(value, low=-1.0, high=1.0):
 
 @dataclass(frozen=True)
 class MappingSettings:
-    wrist_range: float = 0.20
-    scale_range: float = 0.50
-    roll_range: float = pi / 3
+    yaw_range: float = 0.08  # Full command at 8% image width from neutral.
+    pitch_range: float = 0.08  # Full command at 8% image height from neutral.
+    wrist_dead_zone: float = 0.003
+    depth_range: float = 0.15  # Full command at +/-15% palm scale from neutral.
+    depth_dead_zone: float = 0.02  # Ignore +/-2% neutral-relative scale changes.
+    roll_range: float = 25 * pi / 180
     minimum_palm: float = 0.02
     image_aspect: float = 1.0
 
     def __post_init__(self):
         if not all(isfinite(v) and v > 0 for v in vars(self).values()):
             raise ValueError("Mapping settings must be finite and positive")
+        if self.wrist_dead_zone >= min(self.yaw_range, self.pitch_range) or self.depth_dead_zone >= self.depth_range:
+            raise ValueError("Dead zones must be smaller than movement ranges")
+
+
+def relative_command(delta, full_range, dead_zone):
+    return clamp(max(0, abs(delta) - dead_zone) / (full_range - dead_zone)) * (1 if delta >= 0 else -1)
 
 
 @dataclass(frozen=True)
@@ -63,20 +72,22 @@ class HandMapper:
         invalid = InstrumentTarget(state.handedness.upper())
         cal = state.calibration
         if (not state.tracked or not state.valid or not cal.ready
-                or state.wrist is None or state.middle_mcp is None
-                or cal.neutral_palm is None or state.normalized_pinch is None):
+                or state.wrist is None or state.knuckle_line is None
+                or cal.neutral_knuckles is None or state.normalized_pinch is None
+                or state.palm_depth_scale is None or cal.neutral_depth_scale is None):
             return invalid
         cfg = self.settings
         wx, wy = state.wrist
         nx, ny = cal.neutral_wrist
-        px = (state.middle_mcp[0] - wx) * cfg.image_aspect
-        py = state.middle_mcp[1] - wy
-        bx, by = cal.neutral_palm
+        px, py = state.knuckle_line
+        px *= cfg.image_aspect
+        bx, by = cal.neutral_knuckles
         bx *= cfg.image_aspect
-        if not all(isfinite(v) for v in (wx, wy, nx, ny, px, py, bx, by, state.normalized_pinch)):
+        if not all(isfinite(v) for v in (wx, wy, nx, ny, px, py, bx, by, state.normalized_pinch,
+                                        state.palm_depth_scale, cal.neutral_depth_scale)):
             return invalid
         scale, baseline = hypot(px, py), hypot(bx, by)
-        if min(scale, baseline) < cfg.minimum_palm:
+        if min(scale, baseline) < cfg.minimum_palm or min(state.palm_depth_scale, cal.neutral_depth_scale) <= 1e-6:
             return invalid
         angle = (atan2(py, px) - atan2(by, bx) + pi) % (2 * pi) - pi
         # Mirrored image: +x right, +y down; rig external handle lies at +Z.
@@ -84,8 +95,8 @@ class HandMapper:
         # Thus right/down hand displacement uses +yaw/+pitch, with no extra inversion.
         return InstrumentTarget(
             state.handedness.upper(), True,
-            clamp((wx - nx) / cfg.wrist_range),
-            clamp((wy - ny) / cfg.wrist_range),
-            clamp((1 - scale / baseline) / cfg.scale_range),
+            relative_command(wx - nx, cfg.yaw_range, cfg.wrist_dead_zone),
+            relative_command(wy - ny, cfg.pitch_range, cfg.wrist_dead_zone),
+            relative_command(1 - state.palm_depth_scale / cal.neutral_depth_scale, cfg.depth_range, cfg.depth_dead_zone),
             clamp(-angle / cfg.roll_range),  # Preview clockwise -> negative rig Z rotation.
             clamp(state.normalized_pinch, 0, 1))

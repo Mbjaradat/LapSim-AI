@@ -3,6 +3,11 @@
 from pathlib import Path
 import time
 import sys
+import argparse
+import json
+import socket
+import threading
+from dataclasses import asdict
 
 import cv2
 import mediapipe as mp
@@ -41,7 +46,7 @@ def draw_debug_lines(frame, lines):
     return frame
 
 
-def main():
+def main(bridge=None):
     if not MODEL.is_file():
         raise FileNotFoundError(f"Official MediaPipe model missing: {MODEL}")
     options = vision.HandLandmarkerOptions(
@@ -55,7 +60,8 @@ def main():
     print("1: select Left; 2: select Right. Hold each pose BEFORE pressing its key:")
     print("N: neutral wrist; O: open pinch; C: closed pinch (30 consecutive samples each).")
     print("R: reset selected hand including calibration. Q/Esc: quit.")
-    print("N also captures palm scale/orientation: face palm toward camera; hold a comfortable pose.")
+    print("N: comfortable hand distance, palm toward camera. Move closer: retract; farther: insert.")
+    print("Small wrist travel: yaw/pitch. Tilt knuckle line clockwise/counter-clockwise: roll.")
     try:
         with vision.HandLandmarker.create_from_options(options) as detector:
             camera = cv2.VideoCapture(0)
@@ -63,9 +69,13 @@ def main():
                 raise RuntimeError("Cannot open default webcam (index 0).")
             timestamp = -1
             while True:
+                started = time.monotonic()
+                if bridge and bridge.stopped.is_set():
+                    break
                 ok, frame = camera.read()
                 if not ok:
                     raise RuntimeError("Could not read a frame from the webcam.")
+                capture_time = time.perf_counter()  # Same QPC clock in Python 3.12 and Blender 3.13.
                 frame = cv2.flip(frame, 1)
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 timestamp = max(timestamp + 1, time.monotonic_ns() // 1_000_000)
@@ -83,11 +93,14 @@ def main():
                     categories = result.handedness[i] if i < len(result.handedness) else []
                     state = extract_hand_state(
                         landmarks, categories[0].category_name if categories else None,
-                        mirrored_input=True)
+                        mirrored_input=True, image_aspect=width / height)
                     if state is not None:
                         raw_states.append(state)
                 stable = stabilizer.update(raw_states, timestamp / 1000)
                 mapper = HandMapper(MappingSettings(image_aspect=width / height))
+                commands = {side.upper(): mapper.map(state) for side, state in stable.items()}
+                if bridge:
+                    bridge.send(commands, stable, capture_time)
                 debug_lines = []
                 for state in stable.values():
                     wrist = (f"{state.wrist[0]:.2f},{state.wrist[1]:.2f}"
@@ -102,7 +115,7 @@ def main():
                     else:
                         debug_lines.append(f"command invalid | wrist {wrist} | pinch {pinch}")
                 debug_lines.append(f"Selected {selected} | 1:Left 2:Right | N:neutral O:open C:closed")
-                debug_lines.append("Hold pose during sampling | R:reset selected | Q/Esc:quit")
+                debug_lines.append("Depth: hand closer=retract, farther=insert | R:reset | Q/Esc:quit")
                 # Draw last so neither the feed nor another hand's landmarks hide the text.
                 frame = draw_debug_lines(frame, debug_lines)
                 cv2.imshow("LapSim-AI hand detection - Q / Esc to exit", frame)
@@ -115,11 +128,49 @@ def main():
                     stabilizer.calibrate(selected, {"n": "neutral", "o": "open", "c": "closed"}[chr(key).lower()])
                 elif chr(key).lower() == "r":
                     stabilizer.reset(selected)
+                if bridge:
+                    bridge.stopped.wait(max(0, 1 / 30 - (time.monotonic() - started)))
     finally:
         if camera is not None:
             camera.release()
         cv2.destroyAllWindows()
 
 
+class PreviewBridge:
+    """Only plain data leaves this process. EOF also detects parent termination."""
+    def __init__(self, port, token):
+        self.address = ("127.0.0.1", port)
+        self.token = token
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.stopped = threading.Event()
+        threading.Thread(target=self._watch_parent, daemon=True).start()
+
+    def _watch_parent(self):
+        sys.stdin.buffer.read(1)
+        self.stopped.set()
+
+    def send(self, commands, states, timestamp):
+        packet = dict(token=self.token, time=timestamp,
+                      hands={side: asdict(command) for side, command in commands.items()},
+                      state={side.upper(): {"calibrated": bool(s.calibration.ready), "tracked": bool(s.tracked)}
+                             for side, s in states.items()},
+                      status={side.upper(): f"{'tracked' if s.tracked else 'lost'} / {s.status}"
+                              for side, s in states.items()})
+        self.socket.sendto(json.dumps(packet, allow_nan=False).encode(), self.address)
+
+    def close(self):
+        self.stopped.set()
+        self.socket.close()
+
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bridge-port", type=int)
+    parser.add_argument("--bridge-token")
+    args = parser.parse_args()
+    bridge = PreviewBridge(args.bridge_port, args.bridge_token) if args.bridge_port else None
+    try:
+        main(bridge)
+    finally:
+        if bridge:
+            bridge.close()
