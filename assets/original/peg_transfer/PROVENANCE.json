@@ -1,0 +1,12 @@
+{
+  "project": "LapSim-AI peg transfer trainer",
+  "date": "2026-09-09",
+  "author": "LapSim-AI project, AI-assisted procedural implementation",
+  "source": ["blender/scripts/build_peg_transfer.py", "blender/scripts/peg_config.py"],
+  "geometry": "Original board, pegs, numbered rings, guide markings and backdrop generated with Blender primitives; existing original instrument rig reused.",
+  "materials": "Original procedural solid PBR materials; Blender built-in text rendering for original labels; no imported texture or font files.",
+  "third_party_downloads": [],
+  "license": "Original project license remains pending; no public release packaging or licensing finalization.",
+  "scene": "blender/scenes/lapsim_ai_peg_transfer.blend",
+  "limitations": "Educational engineering prototype; not clinically validated and not a competency assessment."
+}

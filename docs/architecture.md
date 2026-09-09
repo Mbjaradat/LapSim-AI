@@ -1,6 +1,10 @@
 # Intended architecture
 
-Phase 1A implements the independent control contract, rigid trocar kinematics, and a primitive Blender scene. The full pipeline below remains the intended architecture; webcam, transport, telemetry, metrics, and assessment are not implemented. See [Phase 1A](phase1a.md) for the actual mechanics.
+Phase 1/2 implement the independent controller, fixed-trocar Blender rig and
+standalone webcam pipeline/loopback bridge. Phase 3 adds a workspace-derived
+procedural environment and optional rigid-token grasp adapter. Telemetry,
+metrics and assessment remain future work. See [Phase 3](phase3.md) for the
+environment/interaction architecture and pending manual evaluation.
 
 ```mermaid
 flowchart TD
@@ -26,7 +30,14 @@ flowchart TD
 
 ## Boundaries
 
-Keep camera processing and independent control/constraint/metric logic in `src/lapsim_ai/`. Keep `bpy` integration in `blender/scripts/` and scenes in `blender/scenes/`. A possible future process boundary separates standalone CV Python from Blender's Python; transport and schema remain undecided. Process separation is an engineering choice, not a guarantee of license independence.
+Keep camera processing and independent control logic in `src/lapsim_ai/`.
+Keep `bpy` integration in `blender/scripts/` and scenes in `blender/scenes/`.
+The existing Phase 2 process boundary separates standalone CV Python from
+Blender; token-tagged loopback packets carry commands and explicit calibration/
+tracking state. Phase 3 does not change that boundary. `LiveSession` invokes an
+optional scene-flagged interaction adapter after applying existing controller
+poses. Only evaluated jaw contact positions reach the pure grasp model.
+Process separation is not a guarantee of license independence.
 
 Before integration, specify coordinate axes, physical units, calibration, handedness, timestamps, sequence numbers, and stale-data behavior. Two-dimensional webcam observations do not directly establish reliable physical depth. The mapping must state its assumptions and limits.
 

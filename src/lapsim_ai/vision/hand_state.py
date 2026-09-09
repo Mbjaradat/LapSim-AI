@@ -3,6 +3,10 @@
 from dataclasses import dataclass
 from math import hypot, isfinite, dist
 from statistics import median
+try:
+    from .palm_orientation import PalmFrame, palm_frame
+except ImportError:  # Existing direct webcam_demo.py entry point.
+    from palm_orientation import PalmFrame, palm_frame
 
 
 @dataclass(frozen=True)
@@ -15,6 +19,8 @@ class HandState:
     middle_mcp: tuple[float, float] | None = None
     palm_depth_scale: float | None = None
     knuckle_line: tuple[float, float] | None = None
+    palm_orientation: PalmFrame | None = None
+    palm_center: tuple[float, float] | None = None
 
 
 def extract_hand_state(landmarks, handedness, *, mirrored_input: bool, image_aspect=1.0):
@@ -48,4 +54,10 @@ def extract_hand_state(landmarks, handedness, *, mirrored_input: bool, image_asp
         depth_scale = None
     index_knuckle, pinky_knuckle = xy(5), xy(17)
     line = (pinky_knuckle[0] - index_knuckle[0], pinky_knuckle[1] - index_knuckle[1])
-    return HandState(handedness, wrist, index_tip, thumb_tip, pinch, xy(9), depth_scale, line)
+    orientation = (palm_frame(list(points.values()))
+                   if all(hasattr(landmarks[i], 'z') for i in points) else None)
+    # Translation steering: distribute influence across the stable palm skeleton.
+    # Wrist 40%, each MCP 15%; thumb/fingertips never enter this estimate.
+    palm = [xy(i) for i in (0,5,9,13,17)]
+    center = tuple(sum(w*p[axis] for w,p in zip((.4,.15,.15,.15,.15),palm)) for axis in (0,1))
+    return HandState(handedness, wrist, index_tip, thumb_tip, pinch, xy(9), depth_scale, line, orientation, center)

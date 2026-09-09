@@ -2,11 +2,17 @@
 
 An experimental educational and research prototype for webcam-controlled laparoscopic simulation, planned for public open-source release.
 
-The intended first scenario is a simplified laparoscopic cholecystectomy environment. Eventually, a laptop webcam will track both hands and control two virtual instruments in Blender through software-enforced trocar/fulcrum constraints.
+The primary MVP is a **peg-transfer box trainer**. A laptop webcam tracks both hands and controls two virtual instruments in Blender through software-enforced trocar/fulcrum constraints. Previous cholecystectomy/anatomy work remains a reference checkpoint.
 
-**Status: Phase 1A — rigid instrument mechanics prototype.** A reproducible Blender training box contains two independently controlled instruments, fixed trocar pivots, and a deterministic demonstration. Anatomy, hand tracking, tissue interaction, and performance assessment are not implemented.
+**Status: Peg-transfer MVP implemented — awaiting manual evaluation.** Six rings,
+matching pegs, deterministic grasp/handoff/placement, reset, and READY/RUNNING/
+COMPLETE states reuse the existing mechanics and dual-hand webcam controls.
+No scoring, AI feedback, anatomy rebuild or public-release packaging is included.
 
-Open `blender/scenes/lapsim_ai_phase1a.blend` and press **Numpad 0** for the camera view, then **Space** to play. See [Phase 1A mechanics and verification](docs/phase1a.md) for regeneration commands, manual controls, and limitations.
+Open `blender/scenes/lapsim_ai_peg_transfer.blend` and follow [Peg transfer build/manual testing](docs/peg_transfer.md).
+The earlier `lapsim_ai_phase3.blend` engineering scene remains preserved.
+Phase 1A/1B scene files remain preserved. See [Phase 1A mechanics](docs/phase1a.md)
+and [Phase 2D webcam workflow](docs/phase2d.md) for their separate instructions.
 
 This project has no clinical validation, does not certify surgical competency, and does not replace supervised surgical training. Future metrics will describe simulator behavior; their relationship to surgical skill requires research and validation.
 
@@ -29,9 +35,9 @@ See [architecture](docs/architecture.md), [roadmap](docs/roadmap.md), and [devel
 | --- | --- |
 | `blender/scenes/` | Distributable Blender scene files |
 | `blender/scripts/` | Scene builder, instrument rigs, demonstration, verification |
-| `src/lapsim_ai/vision/` | Future webcam and hand tracking |
-| `src/lapsim_ai/control/` | Bounded instrument-control contract; future calibration/mapping |
-| `src/lapsim_ai/simulator/` | Future constraints and simulator logic |
+| `src/lapsim_ai/vision/` | Webcam tracking and per-hand calibration/stabilization |
+| `src/lapsim_ai/control/` | Bounded controller, keyboard/webcam inputs, mapping, bridge and startup gate |
+| `src/lapsim_ai/simulator/` | Pure workspace characterization and rigid-token grasp logic |
 | `src/lapsim_ai/telemetry/` | Future interaction event contracts |
 | `src/lapsim_ai/scoring/` | Future descriptive performance metrics |
 | `assets/` | Original assets and separately documented third-party assets |
@@ -40,12 +46,18 @@ See [architecture](docs/architecture.md), [roadmap](docs/roadmap.md), and [devel
 
 ## Dependencies and setup
 
-Phase 1A has no third-party Python dependencies beyond the existing Blender runtime. `pyproject.toml` records provisional metadata; packaging and license metadata will be finalized later. No ML frameworks or assets are installed. See the development guide before creating a standalone Python environment. Blender uses its own bundled Python.
+The working Phase 2 setup uses the existing standalone Python 3.12 virtual
+environment with MediaPipe/OpenCV and the separately recorded official hand model.
+Blender uses its own Python. Phase 3 adds no dependencies, model downloads or
+external geometry; its workspace/grasp logic uses the standard library.
+Packaging and public-release license metadata remain provisional.
 
 ## Licensing and contributions
 
 Apache License 2.0 is proposed for original independent source code, **pending maintainer approval**. No root LICENSE has been finalized; this README is not a license grant. Blender integration requires a separate GPL compatibility review before distribution. See [licensing decisions](docs/licensing.md).
 
-Third-party code, models, textures, datasets, and other materials retain their own terms and must be recorded in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md). No third-party assets are included.
+Third-party materials retain their own terms, recorded in
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md). The existing MediaPipe model
+is separate from the original procedural Phase 3 geometry.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and provenance expectations.

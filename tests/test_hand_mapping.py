@@ -9,12 +9,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from lapsim_ai.control.hand_mapping import HandMapper, MappingSettings
 from lapsim_ai.vision.stabilization import Calibration, StableHandState, HandStabilizer, Settings
 from lapsim_ai.vision.hand_state import HandState
+from lapsim_ai.vision.palm_orientation import PalmFrame
+
+NEUTRAL_FRAME = PalmFrame((0,-1,0), (1,0,0))
 
 
 def state(side="Right", x=.5, y=.5, depth_scale=.7, angle=0, pinch=.5):
     return StableHandState(side, True, True, True, (x,y), (.5,.2), (.6,.2),
-                           .1, pinch, Calibration((.5,.5), .2,.01,(0,-.1),.7,(.1,0)), "ready",
-                           (x, y-.1), depth_scale, (.1*cos(angle), .1*sin(angle)))
+                           .1, pinch, Calibration((.5,.5), .2,.01,(0,-.1),.7,(.1,0),NEUTRAL_FRAME,(.5,.5)), "ready",
+                           (x, y-.1), depth_scale, (.1*cos(angle), .1*sin(angle)), angle,(x,y))
 
 
 class MappingTests(unittest.TestCase):
@@ -57,7 +60,7 @@ class MappingTests(unittest.TestCase):
     def test_invalid_and_degenerate(self):
         mapper = HandMapper()
         for sample in (replace(state(),valid=False), replace(state(),tracked=False),
-                       replace(state(),knuckle_line=None), replace(state(),knuckle_line=(0,0)), state(x=float("nan"))):
+                       replace(state(),roll_angle=None), replace(state(),roll_angle=float('nan')), state(x=float("nan"))):
             command = mapper.map(sample)
             self.assertFalse(command.valid)
             self.assertIsNone(command.yaw)
@@ -72,7 +75,7 @@ class MappingTests(unittest.TestCase):
             engine.calibrate("Right",stage)
             for _ in range(3):
                 t += .03
-                sample = engine.update([HandState("Right",(.5,.5),(.5,.2),(.6,.2),pinch,(.5,.4),.7,(.1,0))],t)["Right"]
+                sample = engine.update([HandState("Right",(.5,.5),(.5,.2),(.6,.2),pinch,(.5,.4),.7,(.1,0),NEUTRAL_FRAME,(.5,.5))],t)["Right"]
         command = HandMapper().map(sample)
         self.assertTrue(command.valid)
         self.assertAlmostEqual(command.insertion, 0)

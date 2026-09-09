@@ -17,6 +17,10 @@ REGISTERED = False
 
 def hud_lines(session, selected):
     controller = session.controller
+    if session.interaction and hasattr(session.interaction, 'hud_lines'):
+        return session.interaction.hud_lines() + [
+            f"Keyboard | {'PAUSED' if controller.paused else 'LIVE'} | {controller.profile[0]}",
+            'Close receiver, then open donor to hand off | R reset | Space pause | Esc stop']
     lines = [f"LapSim-AI | Keyboard | {'PAUSED' if controller.paused else 'LIVE'} | {controller.profile[0]}"]
     for side, pose in controller.poses.items():
         lines.append(f"{'>' if side == selected else ' '} {side}: yaw {pose.yaw:+.1f}  pitch {pose.pitch:+.1f}  "
@@ -118,8 +122,12 @@ class LAPSIM_OT_live(bpy.types.Operator):
             rows.append((i, row))
         width = min(available + 24, max(blf.dimensions(font, line)[0] for _, line in rows) + 24)
         top = 24 + 23 * len(rows) + 20
-        vertices = ((16, 24), (16 + width, 24), (16 + width, top),
-                    (16, 24), (16 + width, top), (16, top))
+        bottom = 24
+        if bpy.context.scene.get('peg_transfer_config'):
+            top = bpy.context.region.height - 48
+            bottom = top - 23 * len(rows) - 20
+        vertices = ((16, bottom), (16 + width, bottom), (16 + width, top),
+                    (16, bottom), (16 + width, top), (16, top))
         shader = gpu.shader.from_builtin("UNIFORM_COLOR")
         batch = batch_for_shader(shader, "TRIS", {"pos": vertices})
         gpu.state.blend_set("ALPHA")

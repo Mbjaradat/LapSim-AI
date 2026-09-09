@@ -46,7 +46,7 @@ class ErgonomicsTests(unittest.TestCase):
         clockwise = mapper.map(state(angle=.2))
         moved = mapper.map(state(x=.55,y=.45,angle=.2))
         self.assertAlmostEqual(clockwise.rotation,moved.rotation)
-        self.assertLess(clockwise.rotation,-.4)
+        self.assertLess(clockwise.rotation,-.25)  # Phase 2.5: 35-degree span, 2-degree deadzone.
         self.assertAlmostEqual(clockwise.rotation,-mapper.map(state(angle=-.2)).rotation)
         self.assertFalse(mapper.map(replace(state(),valid=False)).valid)
 

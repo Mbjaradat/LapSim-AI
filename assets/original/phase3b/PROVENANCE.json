@@ -1,0 +1,12 @@
+{
+  "project": "LapSim-AI Phase 3B",
+  "author": "LapSim-AI project, AI-assisted procedural implementation",
+  "source": "blender/scripts/build_phase3b.py and phase3b_config.py",
+  "date": "2026-09-08",
+  "original_objects": ["PERITONEAL_CAVITY", "GALLBLADDER_BED", "CYSTIC_DUCT", "COMMON_BILE_DUCT", "COMMON_HEPATIC_DUCT", "CYSTIC_ARTERY", "RIGHT_HEPATIC_ARTERY"],
+  "original_preparation": ["Gallbladder anchor and fundus/body regions", "Procedural node materials and illumination"],
+  "external_assets": "LIVER and GALLBLADDER are modified SPL assets, NOT original. See assets/third_party/anatomy/spl_liver_2014/SOURCE.json and LICENSE.txt.",
+  "method": "Original analytic curved shell and Bezier tubes; no external textures, atlas tracing or proprietary mesh copying.",
+  "license": "Original project licensing remains pending; no final license granted here.",
+  "limitations": "Static illustrative approximations, not exact anatomy, clinical validation or simulated tissue mechanics."
+}

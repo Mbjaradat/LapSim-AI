@@ -61,13 +61,50 @@ class LiveSession:
         self.rig = BlenderRig()
         self.controller = InstrumentController(DEFAULTS, LIMITS)
         self.rig.apply(self.controller.poses)
+        self.interaction = None
+        self.collision = None
+        if bpy.context.scene.get('peg_transfer_config'):
+            from peg_interaction import PegInteraction
+            self.interaction = PegInteraction()
+            from lapsim_ai.simulator.collision import CollisionConstraint, CollisionSettings
+            from config import TROCARS, SHAFT_RADIUS
+            from peg_config import BOARD_TOP, RING_THICKNESS
+            self.collision = CollisionConstraint(TROCARS,LIMITS,CollisionSettings(
+                board_height=BOARD_TOP,shaft_radius=SHAFT_RADIUS,jaw_length=JAW_LENGTH,
+                jaw_half_angle=LIVE_JAW_HALF_ANGLE_DEGREES,ring_thickness=RING_THICKNESS))
+        elif bpy.context.scene.get('phase3_interactions', False):
+            from phase3_interaction import Phase3Interaction
+            self.interaction = Phase3Interaction()
 
     def update(self, commands, dt):
-        self.rig.apply(self.controller.update(commands, dt))
+        previous = self.controller.poses
+        self._apply_proposal(previous,self.controller.update(commands, dt))
+        if self.interaction and not self.controller.paused:
+            self._update_interaction(dt)
+
+    def _apply_proposal(self, previous, proposed):
+        if self.collision and not self.controller.paused:
+            world = self.interaction.world
+            held = {side:world.offsets[name] for name,side in world.owners.items() if side}
+            proposed = self.controller.accept_constrained_poses(self.collision.resolve(previous,proposed,held))
+        self.rig.apply(proposed)
+
+    def _update_interaction(self, dt):
+        if bpy.context.scene.get('peg_transfer_config'):
+            self.interaction.update(self.controller.poses, dt)
+        else:
+            self.interaction.update(self.controller.poses)
 
     def reset(self):
         self.controller.reset()
+        if self.collision:
+            self.collision.reset()
         self.rig.apply(self.controller.poses)
+        if self.interaction:
+            self.interaction.reset()
 
     def update_targets(self, targets, dt):
-        self.rig.apply(self.controller.update_targets(targets, dt))
+        previous = self.controller.poses
+        self._apply_proposal(previous,self.controller.update_targets(targets, dt))
+        if self.interaction and not self.controller.paused:
+            self._update_interaction(dt)

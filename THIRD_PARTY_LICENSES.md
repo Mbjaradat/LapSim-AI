@@ -1,11 +1,32 @@
 # Third-party materials register
 
-No third-party code, assets, models, textures, recordings, or datasets are currently bundled. No external Python dependencies are currently declared. Blender is an external prerequisite, not redistributed in this repository. Phase 1A geometry and materials are generated from Blender primitives by original project scripts; no external models, textures, or fonts are imported. The scene's eventual distribution license remains pending under docs/licensing.md.
+The peg-transfer MVP adds no third-party assets or downloads. Its procedural
+board/pegs/rings/materials are recorded in
+`assets/original/peg_transfer/PROVENANCE.json`. It does not import the separate
+anatomy assets. Existing prerequisites and original-license decisions are unchanged.
+
+Phase 3 adds **no third-party assets**: its liver, gallbladder, cavity, beads and
+debug geometry/materials are original procedural work. See
+`assets/original/phase3/PROVENANCE.json`. No external anatomy was downloaded,
+traced or copied. Original code and generated-scene distribution licensing remain
+pending under docs/licensing.md; no license is finalized by this addition.
+
+The existing Phase 2 MediaPipe model is third-party and remains separate from
+original code/assets. Blender and the locally installed Python packages are
+external prerequisites, not redistributed Blender binaries or vendored packages.
 
 This register is separate from the proposed license for original source code. Before adding any material, record all fields below, including embedded textures, fonts, scripts, model weights, and transitive bundled components. Use one row per item or link a detailed per-item record if necessary.
 
 | ID / repository path | Type / version / SHA-256 | Origin and title | Author / rights holder | Original URL / source | Retrieved date | Exact license / version | Local license text | Modifications | Attribution and redistribution requirements | Review status / reviewer |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| assets/third_party/mediapipe_hand_landmarker/hand_landmarker.task | Hand Landmarker full float16; SHA-256 fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1 | MediaPipe Hand Landmarker | Google / MediaPipe | [Official model](https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task) | 2026-09-07 | Apache-2.0, per existing SOURCE.json/model-card evidence | assets/third_party/mediapipe_hand_landmarker/LICENSE.txt | None | Retain license/applicable notices; identify modifications; commercial use, modification and redistribution permitted subject to license terms | Existing Phase 2 record preserved; not newly downloaded in Phase 3 |
+
+The per-model `SOURCE.json` preserves the exact origin, author, license evidence,
+retrieval date, checksum and redistribution requirements. Generated Phase 3
+reports under `outputs/phase3/` are intermediates, not imported assets. A future
+release must review original source licensing separately from asset licensing
+and include the applicable third-party notices; this register is not a blanket
+license grant.
 
 ## Admission process
 

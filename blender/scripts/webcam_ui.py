@@ -54,6 +54,10 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
                  "Preview: 1/2 select; N/O/C calibrate; R recalibrate selected",
                  "Auto-start: both hands ready for 5s | Space pauses/resumes after LIVE",
                  "Blender: R neutral + pause | Esc stop"]
+        if self.session.interaction and hasattr(self.session.interaction, 'hud_lines'):
+            lines = self.session.interaction.hud_lines() + [
+                lines[0], 'Preview: 1/2 select; N/O/C calibrate',
+                'Close receiver, then open donor | Blender R reset + pause | Space resume | Esc stop']
         rows = []
         blf.size(0, 15)
         width = max(100, bpy.context.region.width - 40)
@@ -71,7 +75,10 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
         blf.shadow(0, 5, 0, 0, 0, 1)
         blf.color(0, 1, 1, 1, 1)
         for i, line in enumerate(reversed(rows)):
-            blf.position(0, 20, 32 + i * 22, 0)
+            y = 32 + i * 22
+            if bpy.context.scene.get('peg_transfer_config'):
+                y = bpy.context.region.height - 48 - (len(rows)-1-i)*22
+            blf.position(0, 20, y, 0)
             blf.draw(0, line)
         blf.disable(0, blf.SHADOW)
 

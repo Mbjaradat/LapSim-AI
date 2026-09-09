@@ -3,6 +3,10 @@
 from dataclasses import dataclass, replace
 from math import exp, isfinite
 from statistics import median
+try:
+    from .palm_orientation import PalmFrame, TwistFilter, neutral_frame, relative_twist
+except ImportError:  # Existing standalone demo entry point.
+    from palm_orientation import PalmFrame, TwistFilter, neutral_frame, relative_twist
 
 
 @dataclass(frozen=True)
@@ -19,12 +23,14 @@ class Settings:
     depth_max_step: float = 0.03  # Fraction of neutral palm scale per update.
     calibration_samples: int = 30
     minimum_pinch_span: float = 0.005
+    roll_smoothing_seconds: float = 0.06
 
     def __post_init__(self):
         values = (self.smoothing_seconds, self.dead_zone, self.loss_timeout,
                   self.max_step, self.max_pinch_step, self.minimum_pinch_span,
                   self.pinch_smoothing_seconds, self.pinch_dead_zone,
-                  self.depth_smoothing_seconds, self.depth_filter_dead_zone, self.depth_max_step)
+                  self.depth_smoothing_seconds, self.depth_filter_dead_zone, self.depth_max_step,
+                  self.roll_smoothing_seconds)
         if not all(isfinite(v) for v in values) or min(values) < 0:
             raise ValueError("Settings must be finite and nonnegative")
         if self.max_step == 0 or self.max_pinch_step == 0 or self.depth_max_step == 0 or self.minimum_pinch_span == 0 or self.calibration_samples < 3:
@@ -39,6 +45,8 @@ class Calibration:
     neutral_palm: tuple[float, float] | None = None
     neutral_depth_scale: float | None = None
     neutral_knuckles: tuple[float, float] | None = None
+    neutral_orientation: PalmFrame | None = None
+    neutral_palm_center: tuple[float, float] | None = None
 
     @property
     def ready(self):
@@ -62,6 +70,8 @@ class StableHandState:
     middle_mcp: tuple[float, float] | None = None
     palm_depth_scale: float | None = None
     knuckle_line: tuple[float, float] | None = None
+    roll_angle: float | None = None  # Filtered, neutral-relative palm twist in radians.
+    palm_center: tuple[float, float] | None = None
 
 
 class _Hand:
@@ -70,6 +80,8 @@ class _Hand:
         self.calibration = Calibration()
         self.stage = None
         self.samples = []
+        self.orientation_samples = []
+        self.roll_filter = TwistFilter()
         self.message = "uncalibrated"
 
 
@@ -96,12 +108,14 @@ class HandStabilizer:
             raise ValueError("Expected neutral, open or closed")
         hand = self.hands[side]
         hand.stage, hand.samples = stage, []
+        hand.orientation_samples = []
 
-    def _collect(self, hand, values):
+    def _collect(self, hand, values, orientation):
         if hand.stage is None:
             return
         # Median raw samples avoid filter lag bias during calibration.
         hand.samples.append(values)
+        hand.orientation_samples.append(orientation)
         if len(hand.samples) < self.settings.calibration_samples:
             return
         sampled = tuple(median(column) for column in zip(*hand.samples))
@@ -112,8 +126,11 @@ class HandStabilizer:
         if hand.stage == "neutral":
             candidate = replace(candidate,
                                 neutral_palm=(sampled[7] - sampled[0], sampled[8] - sampled[1]) if len(sampled) >= 9 else None,
-                                neutral_depth_scale=sampled[9] if len(sampled) == 12 else None,
-                                neutral_knuckles=sampled[10:12] if len(sampled) == 12 else None)
+                                neutral_depth_scale=sampled[9] if len(sampled) >= 12 else None,
+                                neutral_knuckles=sampled[10:12] if len(sampled) >= 12 else None,
+                                neutral_orientation=neutral_frame(hand.orientation_samples),
+                                neutral_palm_center=sampled[12:14] if len(sampled) == 14 else None)
+            hand.roll_filter = TwistFilter()
         if (candidate.pinch_open is not None and candidate.pinch_closed is not None
                 and candidate.pinch_open - candidate.pinch_closed < self.settings.minimum_pinch_span):
             hand.message = "range rejected: retry O/C"
@@ -121,6 +138,7 @@ class HandStabilizer:
             hand.calibration = candidate
             hand.message = "ready" if candidate.ready else "needs N/O/C"
         hand.stage, hand.samples = None, []
+        hand.orientation_samples = []
 
     def update(self, states, now):
         if not isfinite(now) or (self._time is not None and now <= self._time):
@@ -143,10 +161,13 @@ class HandStabilizer:
                     candidate += tuple(raw.middle_mcp)
                     if raw.palm_depth_scale is not None and raw.knuckle_line is not None:
                         candidate += (raw.palm_depth_scale, *raw.knuckle_line)
+                        if raw.palm_center is not None:
+                            candidate += tuple(raw.palm_center)
                 if (all(isfinite(v) for v in candidate)
                         and all(0 <= v <= 1 for v in candidate[:6] + candidate[7:9])
                         and (len(candidate) < 12 or candidate[9] > 0)
-                        and all(-1 <= v <= 1 for v in candidate[10:])
+                        and all(-1 <= v <= 1 for v in candidate[10:12])
+                        and all(0 <= v <= 1 for v in candidate[12:])
                         and 0 <= candidate[6] <= 2 ** 0.5):
                     values = candidate
             tracked = values is not None
@@ -155,6 +176,7 @@ class HandStabilizer:
                 if hand.filtered is None or len(hand.filtered) != len(values):
                     hand.filtered = hand.output = values
                     hand.samples = []  # Do not mix incomplete/full geometry captures.
+                    hand.orientation_samples = []
                 else:
                     hand.filtered = tuple(a + (pinch_alpha if i == 6 else depth_alpha if i == 9 else alpha) * (b - a)
                                           for i, (a, b) in enumerate(zip(hand.filtered, values)))
@@ -174,9 +196,13 @@ class HandStabilizer:
                             movement = max(0, abs(delta) - cfg.pinch_dead_zone * span)
                         output.append(old + min(limit, movement) * (1 if delta >= 0 else -1))
                     hand.output = tuple(output)
-                self._collect(hand, values)
+                self._collect(hand, values, raw.palm_orientation)
             else:
                 hand.samples = []
+                hand.orientation_samples = []
+            roll = hand.roll_filter.update(
+                relative_twist(hand.calibration.neutral_orientation, raw.palm_orientation) if tracked else None,
+                dt, cfg.roll_smoothing_seconds)
             available = hand.last_seen is not None and now - hand.last_seen <= cfg.loss_timeout
             cal = hand.calibration
             out = hand.output
@@ -190,6 +216,7 @@ class HandStabilizer:
                 out[:2] if out else None, out[2:4] if out else None,
                 out[4:6] if out else None, out[6] if out else None,
                 pinch, cal, status, out[7:9] if out and len(out) >= 9 else None,
-                out[9] if out and len(out) == 12 else None,
-                out[10:12] if out and len(out) == 12 else None)
+                out[9] if out and len(out) >= 12 else None,
+                out[10:12] if out and len(out) >= 12 else None, roll,
+                out[12:14] if out and len(out) == 14 else None)
         return result

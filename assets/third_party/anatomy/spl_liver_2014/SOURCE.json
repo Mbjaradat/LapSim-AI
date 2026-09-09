@@ -1,0 +1,137 @@
+{
+  "source_project": "SPL Liver Atlas, February 2014 / Open Anatomy Project",
+  "authors": [
+    "Marianna Jakab",
+    "Sonia Pujol",
+    "Kitt Shaffer",
+    "Ron Kikinis"
+  ],
+  "organizations": [
+    "Surgical Planning Laboratory, Brigham and Women's Hospital / Harvard Medical School",
+    "Boston Medical Center"
+  ],
+  "additional_contributors": [
+    "Matthew D'Artista",
+    "Alex Kikinis",
+    "Tobias Penzkofer"
+  ],
+  "original_url": "https://www.openanatomy.org/atlas-pages/atlas-spl-liver.html",
+  "download_url": "https://www.openanatomy.org/atlases/nac/liver-2014-02-20.zip",
+  "archive_sha256": "a154fdf9613159f29bb341a4f0a8b8e9a0acdba17ce3a74d949f36ab7ef1fe2b",
+  "accessed": "2026-09-08",
+  "license": "3D Slicer Contribution and Software License Agreement v1.0 (December 20, 2005), Part B and applicable Part C",
+  "license_url": "https://www.openanatomy.org/atlas-pages/slicer-license.html",
+  "license_file": "LICENSE.txt",
+  "required_preface": "All or portions of this licensed product (such portions are the “Software”) have been obtained under license from The Brigham and Women’s Hospital, Inc. and are subject to the following terms and conditions:",
+  "attribution": "Liver and gallbladder adapted from SPL Liver Atlas (February 2014), Jakab M., Pujol S., Shaffer K., Kikinis R.; SPL/Brigham and Women's Hospital and Boston Medical Center. Modified by LapSim-AI; not the original atlas.",
+  "redistribution": "Include required preface, ALL Part B paragraphs and applicable terms with copies/sublicenses and user documentation; retain source attributions/notices; mark modified versions. No endorsement. No share-alike obligation.",
+  "commercial_use": "Permitted subject to full license, disclaimers and inherited rights caveat; research prototype, no clinical validation.",
+  "modifications": [
+    "VTK strips triangulated; source normals replaced with outward Blender normals",
+    "Liver segments joined and voxel-remeshed to one continuous surface, then smoothed/decimated; gallbladder smoothed/decimated",
+    "One common rigid presentation transform and uniform scale for both organs; procedural materials; original biliary/arterial context added separately"
+  ],
+  "preparation_parameters": "blender/scripts/phase3b_config.py; build_phase3b.py records applied matrix, topology and modifications in scene and outputs/phase3b/build.json",
+  "assets": [
+    {
+      "source_asset": "liver-2014-02-20/models/Model_10_LiverSegment_III.vtk",
+      "local_source_filename": "Model_10_LiverSegment_III.vtk",
+      "sha256": "2870d05a7bc5d3f82b22fce59df6469076933c24816993cac442994c904c0927",
+      "imported_blender_objects": [
+        "LIVER_III"
+      ],
+      "vertices": 16198,
+      "triangles": 32030
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_12_LiverSegment_VI.vtk",
+      "local_source_filename": "Model_12_LiverSegment_VI.vtk",
+      "sha256": "b8e2249d0fd4eed83cbf3f81c3c3932ccb06a94c4649e4d76a6d8b12516e8264",
+      "imported_blender_objects": [
+        "LIVER_VI"
+      ],
+      "vertices": 30895,
+      "triangles": 61388
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_15_LiverSegment_IVa.vtk",
+      "local_source_filename": "Model_15_LiverSegment_IVa.vtk",
+      "sha256": "b8ef6441b323c9a9e1742b5173d4e028781d20acfa317da0f62155f5918d6d25",
+      "imported_blender_objects": [
+        "LIVER_IVa"
+      ],
+      "vertices": 29616,
+      "triangles": 58122
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_17_LiverSegment_IVb.vtk",
+      "local_source_filename": "Model_17_LiverSegment_IVb.vtk",
+      "sha256": "ee9fbabd201b6cfb4bdc412be99b6cc8b504b2897264923e982a8e9c2754f4d6",
+      "imported_blender_objects": [
+        "LIVER_IVb"
+      ],
+      "vertices": 16455,
+      "triangles": 32226
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_18_LiverSegment_I.vtk",
+      "local_source_filename": "Model_18_LiverSegment_I.vtk",
+      "sha256": "248ade02085a15c6c0dcdc1be7d2422ba52e128f99f9bb3fe45ec47b47a3f746",
+      "imported_blender_objects": [
+        "LIVER_I"
+      ],
+      "vertices": 8609,
+      "triangles": 16782
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_24_LiverSegment_V.vtk",
+      "local_source_filename": "Model_24_LiverSegment_V.vtk",
+      "sha256": "510a53d8fad972b78cced58a85e4f2c881f34d38c71d3168f38b3acc88675428",
+      "imported_blender_objects": [
+        "LIVER_V"
+      ],
+      "vertices": 32744,
+      "triangles": 64914
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_26_LiverSegment_VII.vtk",
+      "local_source_filename": "Model_26_LiverSegment_VII.vtk",
+      "sha256": "3062417e52e6fe63333db40c84fd952b4d5d184dd906d98375a5dcb00863fda7",
+      "imported_blender_objects": [
+        "LIVER_VII"
+      ],
+      "vertices": 44913,
+      "triangles": 88956
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_33_LiverSegment_VIII.vtk",
+      "local_source_filename": "Model_33_LiverSegment_VIII.vtk",
+      "sha256": "33169c0a3e31ae7cfaeadc5397b67829b03b5d3cb605c80e3e0ce1d55c36c272",
+      "imported_blender_objects": [
+        "LIVER_VIII"
+      ],
+      "vertices": 38746,
+      "triangles": 75774
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_40_Gallbladder.vtk",
+      "local_source_filename": "Model_40_Gallbladder.vtk",
+      "sha256": "621ac79a071d5351f789b9abf6f743a69497b87302907365f5e2d503dfa821b0",
+      "imported_blender_objects": [
+        "GALLBLADDER"
+      ],
+      "vertices": 6683,
+      "triangles": 13254
+    },
+    {
+      "source_asset": "liver-2014-02-20/models/Model_9_LiverSegment_II.vtk",
+      "local_source_filename": "Model_9_LiverSegment_II.vtk",
+      "sha256": "7e6d332bec94d290b5eb52e675cf6c65fb6b638a7fa9a5173a5d11c1f901e12e",
+      "imported_blender_objects": [
+        "LIVER_II"
+      ],
+      "vertices": 26147,
+      "triangles": 51704
+    }
+  ]
+}

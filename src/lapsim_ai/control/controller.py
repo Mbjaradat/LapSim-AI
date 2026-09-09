@@ -59,6 +59,13 @@ class InstrumentController:
         """Reset all five channels; retain pause and sensitivity preferences."""
         self._poses = dict(self.neutral)
 
+    def accept_constrained_poses(self, poses):
+        """Commit accepted output poses; subsequent updates start at contact, not inside geometry."""
+        if set(poses) != set(SIDES):
+            raise ValueError('Both constrained instrument poses are required')
+        self._poses = {side:pose.limited(self.limits) for side,pose in poses.items()}
+        return self.poses
+
     def update(self, commands, dt):
         if not math.isfinite(dt) or dt < 0:
             raise ValueError("dt must be finite and nonnegative")
