@@ -72,6 +72,7 @@ class WebcamProcess:
         self.socket.setblocking(False)
         self.token = secrets.token_hex(16)
         self.frame = None
+        self.setup = {}
         self.calibrated = {side: False for side in ("LEFT", "RIGHT")}
         self.state_time = float("-inf")
         self.closed = False
@@ -108,11 +109,23 @@ class WebcamProcess:
             frame = decode_frame(data, self.token, now)
             if frame and (self.frame is None or frame[0] > self.frame[0]):
                 self.frame = frame
+                raw_setup = json.loads(data).get("setup", {})
+                self.setup = raw_setup if isinstance(raw_setup, dict) else {}
         if self.frame is None or now - self.frame[0] > STALE_SECONDS:
             self.status = "Waiting/stale: holding poses"
             return []
         self.status = " | ".join(f"{side}: {status}" for side, status in self.frame[2].items())
         return self.frame[1]
+
+    def inform(self, state, message, action=None):
+        """Small parent-to-preview UI message; no image data crosses the pipe."""
+        if self.closed or self.process.poll() is not None:
+            return
+        try:
+            self.process.stdin.write((json.dumps(dict(state=state, message=message, action=action)) + "\n").encode())
+            self.process.stdin.flush()
+        except (BrokenPipeError, OSError):
+            pass
 
     def stop(self):
         """Request graceful exit (stdin EOF); no wait on Blender's main thread."""

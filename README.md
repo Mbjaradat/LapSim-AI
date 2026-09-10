@@ -10,6 +10,11 @@ COMPLETE states reuse the existing mechanics and dual-hand webcam controls.
 No scoring, AI feedback, anatomy rebuild or public-release packaging is included.
 
 Open `blender/scenes/lapsim_ai_peg_transfer.blend` and follow [Peg transfer build/manual testing](docs/peg_transfer.md).
+For the current webcam flow, use [Phase 5 guided setup and hands-free acceptance](docs/phase5.md):
+both-hand neutral/open/pinch holds now calibrate automatically, followed by the
+existing five-second LIVE countdown. HOME references persist during play.
+Physical hands-free acceptance is pending; earlier N/O/C setup instructions are
+superseded for this public worker.
 The earlier `lapsim_ai_phase3.blend` engineering scene remains preserved.
 Phase 1A/1B scene files remain preserved. See [Phase 1A mechanics](docs/phase1a.md)
 and [Phase 2D webcam workflow](docs/phase2d.md) for their separate instructions.

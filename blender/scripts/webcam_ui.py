@@ -7,7 +7,7 @@ import blf
 import live_ui
 from live_rig import LiveSession
 from lapsim_ai.control.webcam_bridge import WebcamProcess
-from lapsim_ai.control.webcam_startup import WebcamStartup
+from lapsim_ai.control.public_runtime import PublicRuntime
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTERED = False
@@ -24,7 +24,9 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
 
     def invoke(self, context, event):
         self._closed = False
-        self.startup = WebcamStartup()
+        self.runtime = PublicRuntime()
+        self.startup = self.runtime.startup
+        self._last_notice = None
         self.worker = None
         self._timer = self._draw = None
         self._wm, self._window, self._area = context.window_manager, context.window, context.area
@@ -49,15 +51,13 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
     def draw_hud(self):
         if self._closed or bpy.context.area != self._area:
             return
-        lines = [f"LapSim Webcam | {self.startup.label(self.session.controller.paused)}",
-                 self.worker.status,
-                 "Preview: 1/2 select; N/O/C calibrate; R recalibrate selected",
-                 "Auto-start: both hands ready for 5s | Space pauses/resumes after LIVE",
-                 "Blender: R neutral + pause | Esc stop"]
+        lines = [self.runtime.message,
+                 "Follow the Camera and HOME preview",
+                 "Fallback: Space pause/resume | R retry | Backspace recenter | Esc stop"]
         if self.session.interaction and hasattr(self.session.interaction, 'hud_lines'):
             lines = self.session.interaction.hud_lines() + [
-                lines[0], 'Preview: 1/2 select; N/O/C calibrate',
-                'Close receiver, then open donor | Blender R reset + pause | Space resume | Esc stop']
+                lines[0], 'Handoff: close receiver, then open donor',
+                'Fallback: Space pause/resume | R retry | Backspace recenter | Esc stop']
         rows = []
         blf.size(0, 15)
         width = max(100, bpy.context.region.width - 40)
@@ -127,12 +127,22 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
                 frame = self.worker.frame
                 if not self.startup.started:
                     self.session.controller.paused = True
-                entered = self.startup.update(self.targets, frame[0] if frame else None,
-                                              self.worker.calibrated, now)
-                if entered:
-                    self.session.controller.paused = False
-                # First LIVE tick also holds; later ticks use existing bounded rates.
-                if self.startup.started and not entered:
+                entered = self.runtime.update(self.targets, frame[0] if frame else None,
+                    self.worker.calibrated, self.worker.setup, now,
+                    paused=self.session.controller.paused,
+                    complete=bpy.context.scene.get('peg_task_state') == 'COMPLETE')
+                notice = (self.runtime.state, self.runtime.message)
+                if notice != self._last_notice:
+                    self.worker.inform(*notice)
+                    self._last_notice = notice
+                # Paused observation preserves telemetry timing during an explicit
+                # mid-session recenter. It cannot move tools or update the task.
+                if not self.startup.started or entered:
+                    self.session.controller.paused = True
+                    self.session.update_targets([], now - self._last)
+                    if entered:
+                        self.session.controller.paused = False
+                else:
                     self.session.update_targets(self.targets, now - self._last)
                 self._last = now
                 self._area.tag_redraw()
@@ -149,9 +159,21 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
                     else:
                         self.session.controller.paused = True
                 elif event.type == "R":
-                    self.startup.cancel_countdown()
                     self.session.controller.paused = True
                     self.session.reset()
+                    self.runtime.retry()
+                    self.startup = self.runtime.startup
+                    self.worker.inform('WAITING_FOR_LIVE', 'RETURN TO HOME', 'retry')
+                elif event.type == "BACK_SPACE":
+                    world = getattr(self.session.interaction, 'world', None)
+                    manipulating = world is not None and any(world.owners.values())
+                    if self.session.controller.paused and not manipulating:
+                        self.runtime.retry()
+                        self.startup = self.runtime.startup
+                        self.worker.setup = {}
+                        self.worker.inform('HOME_SETUP', 'PLACE BOTH HANDS COMFORTABLY', 'recenter')
+                    else:
+                        self.report({'WARNING'}, 'Pause and release held objects before recentering')
             # Exclusive provider ownership; never pass transforms or playback keys.
             return {"RUNNING_MODAL"}
         except Exception as error:

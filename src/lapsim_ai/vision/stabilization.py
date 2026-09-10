@@ -110,6 +110,42 @@ class HandStabilizer:
         hand.stage, hand.samples = stage, []
         hand.orientation_samples = []
 
+    def capture_pair(self, stage, frames):
+        """Atomically capture an already validated hold using the existing sampler.
+
+        A private candidate filter prevents partial left/right commits and leaves
+        live smoothing history untouched. Only calibration is installed.
+        """
+        candidate = HandStabilizer(self.settings)
+        for side in self.hands:
+            candidate.hands[side].calibration = self.hands[side].calibration
+            candidate.calibrate(side, stage)
+        for i, frame in enumerate(frames[-self.settings.calibration_samples:]):
+            candidate.update(frame, (i + 1) / 30)
+        for hand in candidate.hands.values():
+            cal = hand.calibration
+            if hand.stage is not None or "rejected" in hand.message:
+                return False
+            if (cal.neutral_palm_center is None or cal.neutral_depth_scale is None
+                    or cal.neutral_orientation is None):
+                return False
+            values = (*cal.neutral_palm_center, *cal.neutral_wrist,
+                      cal.neutral_depth_scale, *cal.neutral_orientation.longitudinal,
+                      *cal.neutral_orientation.transverse)
+            values += tuple(v for v in (cal.pinch_open, cal.pinch_closed) if v is not None)
+            if not all(isfinite(v) for v in values) or cal.neutral_depth_scale <= 0:
+                return False
+            if stage == "closed" and (not cal.ready or cal.pinch_open - cal.pinch_closed < max(
+                    self.settings.minimum_pinch_span, .35 * cal.neutral_depth_scale)):
+                return False
+        for side, hand in self.hands.items():
+            hand.calibration = candidate.hands[side].calibration
+            hand.stage, hand.samples, hand.orientation_samples = None, [], []
+            hand.message = "ready" if hand.calibration.ready else "guided setup"
+            if stage == "neutral":
+                hand.roll_filter = TwistFilter()
+        return True
+
     def _collect(self, hand, values, orientation):
         if hand.stage is None:
             return

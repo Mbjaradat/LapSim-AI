@@ -1,4 +1,4 @@
-"""Minimal two-hand webcam preview. Run directly; Q or Esc exits."""
+"""Guided two-hand webcam preview. Run directly; Q or Esc exits."""
 
 from pathlib import Path
 import time
@@ -7,7 +7,9 @@ import argparse
 import json
 import socket
 import threading
+import queue
 from dataclasses import asdict
+from math import isfinite
 
 import cv2
 import mediapipe as mp
@@ -23,6 +25,7 @@ else:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from lapsim_ai.control.hand_mapping import HandMapper, MappingSettings
+from lapsim_ai.control.public_setup import GuidedSetup, CAMERA_GUIDANCE, home_direction
 
 MODEL = (Path(__file__).resolve().parents[3] / "assets" / "third_party"
          / "mediapipe_hand_landmarker" / "hand_landmarker.task")
@@ -30,20 +33,57 @@ CHAINS = ((0, 1, 2, 3, 4), (0, 5, 6, 7, 8), (5, 9, 10, 11, 12),
           (9, 13, 14, 15, 16), (13, 17, 18, 19, 20), (0, 17))
 
 
-def draw_debug_lines(frame, lines):
-    if not lines:
-        return frame
-    font, scale = cv2.FONT_HERSHEY_SIMPLEX, .65
-    widest = max(cv2.getTextSize(line, font, scale, 2)[0][0] for line in lines)
-    scale *= min(1.0, (frame.shape[1] - 24) / max(1, widest))
-    (_, text_height), baseline = cv2.getTextSize("Right", font, scale, 2)
-    row_height = text_height + baseline + 10
-    frame = cv2.rectangle(frame, (0, 0), (frame.shape[1] - 1, len(lines) * row_height + 8),
-                          (0, 0, 0), cv2.FILLED)
+def draw_public_preview(frame, stable, setup, status, runtime):
+    """Mirrored secondary preview; guidance never obscures the camera image."""
+    frame = cv2.resize(frame, (420, round(frame.shape[0]*420/frame.shape[1])))
+    height, width = frame.shape[:2]
+    active = runtime.get("state") in ("LIVE", "TRACKING_LOST", "PAUSED", "COMPLETE", "LIVE_COUNTDOWN")
+    lines = [runtime.get("message", "") if active else status.message]
+    if status.remaining is not None and not active:
+        lines.append(str(status.remaining))
+    if setup.stage == 'neutral' and status.remaining is None:
+        lines.extend(CAMERA_GUIDANCE)
+    for side, state in stable.items():
+        text = "TRACKED" if state.tracked else "HAND LOST"
+        lines.append(side.upper() + " " + text + (" / CALIBRATED" if state.calibration.ready else " / SETUP"))
+        if side in setup.home:
+            home = setup.home[side]
+            center = (int(home[0]*width), int(home[1]*height))
+            cv2.ellipse(frame, center, (int(.065*width), int(.065*height)), 0, 0, 360, (220, 190, 80), 1)
+            cv2.drawMarker(frame, center, (220, 190, 80), cv2.MARKER_CROSS, 12, 1)
+            cv2.putText(frame, side[0] + " HOME", (center[0]+8, center[1]-8),
+                        cv2.FONT_HERSHEY_SIMPLEX, .45, (255, 255, 255), 1)
+            if runtime.get("state") != "LIVE":
+                position = state.palm_center if state.tracked else None
+                direction = home_direction(position, home)
+                lines.append(side.upper() + " " + direction)
+                if direction == 'HOME':
+                    cv2.circle(frame, center, 4, (100, 220, 120), -1)
+                elif position is not None:
+                    current = (int(position[0]*width), int(position[1]*height))
+                    cv2.arrowedLine(frame, current, center, (220, 190, 80), 2, tipLength=.18)
+    lines.append("Fallback in Blender: Space pause | R retry | Esc stop")
+    # Guidance below the image leaves landmarks and HOME unobscured.
+    rows = []
     for i, line in enumerate(lines):
-        frame = cv2.putText(frame, line, (10, 8 + text_height + i * row_height),
-                            font, scale, (255, 255, 255), 2, cv2.LINE_AA)
-    return frame
+        scale = 1.2 if line.isdigit() else .55 if i == 0 else .44
+        row = ''
+        for word in line.split():
+            candidate = (row + ' ' + word).strip()
+            if row and cv2.getTextSize(candidate, cv2.FONT_HERSHEY_SIMPLEX, scale, 1)[0][0] > width-20:
+                rows.append((row, scale))
+                row = word
+            else:
+                row = candidate
+        rows.append((row, scale))
+    panel = cv2.copyMakeBorder(frame, 0, sum(42 if scale > 1 else 22 for _,scale in rows)+12,
+                              0, 0, cv2.BORDER_CONSTANT)
+    y = height + 4
+    for line, scale in rows:
+        y += 42 if scale > 1 else 22
+        cv2.putText(panel, line, (10, y), cv2.FONT_HERSHEY_SIMPLEX,
+                    scale, (240, 240, 240), 1, cv2.LINE_AA)
+    return panel
 
 
 def main(bridge=None):
@@ -56,12 +96,12 @@ def main(bridge=None):
     )
     camera = None
     stabilizer = HandStabilizer()
-    selected = "Right"
-    print("1: select Left; 2: select Right. Hold each pose BEFORE pressing its key:")
-    print("N: neutral wrist; O: open pinch; C: closed pinch (30 consecutive samples each).")
-    print("R: reset selected hand including calibration. Q/Esc: quit.")
-    print("N: comfortable hand distance, palm toward camera. Move closer: retract; farther: insert.")
-    print("Small wrist travel: yaw/pitch. Tilt knuckle line clockwise/counter-clockwise: roll.")
+    setup = GuidedSetup()
+    runtime = {}
+    window = "LapSim - Camera and HOME"
+    cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(window, 420, 640)
+    print("Guided setup: show both hands, hold neutral, open, then pinch. Q/Esc exits.")
     try:
         with vision.HandLandmarker.create_from_options(options) as detector:
             camera = cv2.VideoCapture(0)
@@ -83,7 +123,10 @@ def main(bridge=None):
                     mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), timestamp)
                 height, width = frame.shape[:2]
                 raw_states = []
+                bounds = {}
                 for i, landmarks in enumerate(result.hand_landmarks):
+                    if len(landmarks) != 21 or not all(isfinite(v) for p in landmarks for v in (p.x, p.y, p.z)):
+                        continue
                     points = [(int(p.x * width), int(p.y * height)) for p in landmarks]
                     for chain in CHAINS:
                         for a, b in zip(chain, chain[1:]):
@@ -96,38 +139,28 @@ def main(bridge=None):
                         mirrored_input=True, image_aspect=width / height)
                     if state is not None:
                         raw_states.append(state)
+                        bounds[state.handedness] = (min(p.x for p in landmarks), min(p.y for p in landmarks),
+                                                   max(p.x for p in landmarks), max(p.y for p in landmarks))
+                        cv2.putText(frame, state.handedness.upper(), points[0], cv2.FONT_HERSHEY_SIMPLEX,
+                                    .5, (255, 255, 255), 1, cv2.LINE_AA)
+                if bridge:
+                    while not bridge.messages.empty():
+                        runtime = bridge.messages.get_nowait()
+                        if runtime.get("action") == "recenter":
+                            setup.recenter(paused=True, manipulating=False)
+                        elif runtime.get("action") == "retry":
+                            runtime = {}
+                status = setup.update(raw_states, bounds, capture_time, stabilizer)
                 stable = stabilizer.update(raw_states, timestamp / 1000)
                 mapper = HandMapper(MappingSettings(image_aspect=width / height))
                 commands = {side.upper(): mapper.map(state) for side, state in stable.items()}
                 if bridge:
-                    bridge.send(commands, stable, capture_time)
-                debug_lines = []
-                for state in stable.values():
-                    wrist = (f"{state.wrist[0]:.2f},{state.wrist[1]:.2f}"
-                             if state.wrist is not None else "--")
-                    pinch = f"{state.normalized_pinch:.2f}" if state.normalized_pinch is not None else "--"
-                    tracking = "tracked" if state.tracked else ("lost" if state.available else "unavailable")
-                    debug_lines.append(f"{state.handedness}: {tracking} | {state.status}")
-                    command = mapper.map(state)
-                    if command.valid:
-                        debug_lines.append(f"yaw {command.yaw:+.2f} pitch {command.pitch:+.2f} depth {command.insertion:+.2f}")
-                        debug_lines.append(f"roll {command.rotation:+.2f} jaw {command.jaw:.2f}")
-                    else:
-                        debug_lines.append(f"command invalid | wrist {wrist} | pinch {pinch}")
-                debug_lines.append(f"Selected {selected} | 1:Left 2:Right | N:neutral O:open C:closed")
-                debug_lines.append("Depth: hand closer=retract, farther=insert | R:reset | Q/Esc:quit")
-                # Draw last so neither the feed nor another hand's landmarks hide the text.
-                frame = draw_debug_lines(frame, debug_lines)
-                cv2.imshow("LapSim-AI hand detection - Q / Esc to exit", frame)
+                    bridge.send(commands, stable, capture_time, asdict(status))
+                panel = draw_public_preview(frame, stable, setup, status, runtime)
+                cv2.imshow(window, panel)
                 key = cv2.waitKey(1) & 0xFF
                 if key in (ord("q"), ord("Q"), 27):
                     break
-                if key in (ord("1"), ord("2")):
-                    selected = "Left" if key == ord("1") else "Right"
-                elif chr(key).lower() in ("n", "o", "c"):
-                    stabilizer.calibrate(selected, {"n": "neutral", "o": "open", "c": "closed"}[chr(key).lower()])
-                elif chr(key).lower() == "r":
-                    stabilizer.reset(selected)
                 if bridge:
                     bridge.stopped.wait(max(0, 1 / 30 - (time.monotonic() - started)))
     finally:
@@ -143,14 +176,22 @@ class PreviewBridge:
         self.token = token
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.stopped = threading.Event()
+        self.messages = queue.Queue(maxsize=16)
         threading.Thread(target=self._watch_parent, daemon=True).start()
 
     def _watch_parent(self):
-        sys.stdin.buffer.read(1)
+        for line in sys.stdin.buffer:
+            try:
+                message = json.loads(line)
+                if self.messages.full():
+                    self.messages.get_nowait()
+                self.messages.put_nowait(message)
+            except (ValueError, queue.Empty, queue.Full):
+                pass
         self.stopped.set()
 
-    def send(self, commands, states, timestamp):
-        packet = dict(token=self.token, time=timestamp,
+    def send(self, commands, states, timestamp, setup=None):
+        packet = dict(token=self.token, time=timestamp, setup=setup or {},
                       hands={side: asdict(command) for side, command in commands.items()},
                       state={side.upper(): {"calibrated": bool(s.calibration.ready), "tracked": bool(s.tracked)}
                              for side, s in states.items()},
