@@ -153,6 +153,8 @@ class LAPSIM_OT_live(bpy.types.Operator):
         if self._closed:
             return
         self._closed = True
+        if self.session.interaction and hasattr(self.session.interaction,'finish'):
+            self.session.interaction.finish()
         self.provider.clear()
         self._wm.event_timer_remove(self._timer)
         bpy.types.SpaceView3D.draw_handler_remove(self._draw, "WINDOW")

@@ -1,6 +1,7 @@
 """Deterministic joint-space constraints, without bpy, vision or mesh queries."""
 from dataclasses import dataclass, replace
 from math import sin, cos, radians, ceil, dist
+from math import hypot
 
 
 def add(a,b): return tuple(x+y for x,y in zip(a,b))
@@ -41,6 +42,9 @@ class CollisionSettings:
     sweep_step: float = .00075
     max_substeps: int = 64
     search_iterations: int = 9
+    workspace_planes: tuple = ()  # Optional inward planes; legacy scenes unchanged.
+    distal_length: float = .018
+    ring_radius: float = .0071  # Outer radius, including torus thickness.
 
 
 def transform(pose,vector):
@@ -100,11 +104,44 @@ class CollisionConstraint:
         return all(segment_distance(a,b,c,d)>=r+s+self.settings.clearance-1e-10
                    for a,b,r in left for c,d,s in right)
 
+    def workspace_gaps(self,side,pose,held):
+        cfg=self.settings
+        if not cfg.workspace_planes: return {}
+        segments,contact=self._geometry(side,pose)
+        base=segments[0][1]
+        distal=(add(base,transform(pose,(0,0,cfg.distal_length))),base,cfg.shaft_radius)
+        working=(distal,*segments[1:])  # Proximal shaft/trocar intentionally outside.
+        ring=add(contact,held[side]) if side in held else None
+        gaps={}
+        for name,n,offset in cfg.workspace_planes:
+            low=min(min(dot(n,a),dot(n,b))-radius for a,b,radius in working)
+            if ring is not None:
+                support=cfg.ring_radius*hypot(n[0],n[1])+cfg.ring_thickness*abs(n[2])
+                low=min(low,dot(n,ring)-support)
+            gaps[name]=low-offset-cfg.clearance
+        return gaps
+
+    def workspace_gap(self,side,pose,held):
+        return min(self.workspace_gaps(side,pose,held).values(),default=float('inf'))
+
     def _board_project(self,side,pose,held):
         gap=self.board_gap(side,pose,held)
         if gap<0:
             vertical=-transform(pose,(0,0,-1))[2]
             pose=replace(pose,insertion=max(self.limits.insertion[0],pose.insertion+gap/vertical))
+        if self.settings.workspace_planes:
+            # All working proxies translate together along the shaft when insertion
+            # changes. Intersect their allowable insertion intervals to slide along
+            # the wall without moving the pivot or disconnecting the jaws.
+            low,high=self.limits.insertion
+            direction=transform(pose,(0,0,-1))
+            gaps=self.workspace_gaps(side,pose,held)
+            for name,n,_ in self.settings.workspace_planes:
+                slope=dot(n,direction)
+                if slope>1e-10: low=max(low,pose.insertion-gaps[name]/slope)
+                elif slope< -1e-10: high=min(high,pose.insertion-gaps[name]/slope)
+            if low<=high:
+                pose=replace(pose,insertion=min(high,max(low,pose.insertion)))
         return pose
 
     def resolve(self,previous,proposed,held=None):
@@ -135,17 +172,24 @@ class CollisionConstraint:
                         return self._board_project(side,pose,held)
                     pose=candidate(1.)
                     trial={**current,side:pose}
-                    if self.board_gap(side,pose,held)>=-1e-10 and self._pair_clear(trial):
+                    def valid(pose):
+                        return ((not cfg.workspace_planes or abs(pose.insertion-start.insertion)<=cfg.sweep_step+1e-10)
+                                and self.board_gap(side,pose,held)>=-1e-10
+                                and self.workspace_gap(side,pose,held)>=-1e-10
+                                and self._pair_clear({**current,side:pose}))
+                    if valid(pose):
                         current=trial
                     else:
-                        self.contacts.add(side+':instrument')
+                        self.contacts.add(side+(':workspace' if self.workspace_gap(side,pose,held)<-1e-10 else ':instrument'))
                         low,high=0.,1.
                         for _ in range(cfg.search_iterations):
                             middle=(low+high)/2; pose=candidate(middle)
-                            if self.board_gap(side,pose,held)>=-1e-10 and self._pair_clear({**current,side:pose}): low=middle
+                            if valid(pose): low=middle
                             else: high=middle
                         current[side]=candidate(low) if low else start
                 if self.board_gap(side,current[side],held)<1e-7: self.contacts.add(side+':board')
+                for name,gap in self.workspace_gaps(side,current[side],held).items():
+                    if gap<1e-7: self.contacts.add(side+':'+name)
             if current==step_start:
                 break  # Remaining intent cannot cross contact; retry fresh next tick.
         return current

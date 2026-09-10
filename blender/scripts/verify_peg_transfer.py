@@ -69,6 +69,7 @@ def main():
             assert session.collision.pair_gap(session.controller.poses)>=-1e-9
             held={owner:task.world.offsets[n] for n,owner in task.world.owners.items() if owner}
             assert all(session.collision.board_gap(s,p,held)>=-1e-9 for s,p in session.controller.poses.items())
+            assert all(session.collision.workspace_gap(s,p,held)>=-1e-9 for s,p in session.controller.poses.items())
             if all(abs(getattr(actual,k)-getattr(desired,k))<1e-7 for k in ('yaw','pitch','insertion','rotation','jaw')):
                 break
             if last==actual and any(contact.startswith(side) for contact in session.collision.contacts):
@@ -82,6 +83,11 @@ def main():
                 mesh=obj.to_mesh()
                 assert min((obj.matrix_world@v.co).z for v in mesh.vertices)>=session.collision.settings.board_height-1e-7,(s,part,'board penetration')
                 obj.to_mesh_clear()
+            from lapsim_ai.simulator.collision import proxies
+            segments,contact=proxies(TROCARS[s],session.controller.poses[s],session.collision.settings)
+            for point in (segments[0][1],contact,*[endpoint for a,b,r in segments[1:] for endpoint in (a,b)]):
+                projected=world_to_camera_view(scene,scene.camera,Vector(point))
+                assert .04<projected.x<.96 and .04<projected.y<.96 and projected.z>0
     def move_object(name,side,point,jaw):
         offset=task.world.offsets.get(name,(0,0,0))
         move(side,tuple(p-o for p,o in zip(point,offset)),jaw)
@@ -106,8 +112,26 @@ def main():
         move_object(name,'RIGHT',(target[0],target[1],target[2]+.025),0)
         move_object(name,'RIGHT',target,0); move_object(name,'RIGHT',target,1)
         assert task.placements[name]=='CORRECT',(name,'placement',task.world.positions[name])
+        if name=='RING_1':
+            telemetry=session.interaction.telemetry
+            active=telemetry.active; paths=dict(telemetry.paths)
+            session.controller.paused=True
+            session.interaction._telemetry_time-=2  # Synthetic elapsed wall time, no sleep.
+            session.update_targets([],.05)
+            assert telemetry.active==active and telemetry.paths==paths
+            session.controller.paused=False
+            session.update_targets([],.05)
+            assert telemetry.paused_seconds>=2 and len(telemetry.pauses)==1
         for side in TROCARS: baseline.check_instrument(side); check_jaws(side)
     assert task.state=='COMPLETE' and task.completed==6
+    result=session.interaction.telemetry.result
+    assert result['outcome']=='COMPLETE' and result['objects_completed']==6
+    assert result['counts']==dict(grasps=12,releases=12,handoffs=6,drops=0,incorrect_placements=0,successful_placements=6),result['counts']
+    assert result['active_seconds']>0
+    assert abs(result['active_seconds']+result['paused_seconds']-(result['end_seconds']-result['start_seconds']))<1e-8
+    assert all(result['path_metres'][side]>0 for side in TROCARS)
+    assert json.loads(scene['peg_session_result'])==result
+    assert session.interaction.hud_lines()[0]=='PEG TRANSFER COMPLETE'
     session.controller.paused=True
     elapsed=task.elapsed
     session.update_targets([],.1)
@@ -119,6 +143,8 @@ def main():
     assert session.controller.poses==session.controller.neutral
     assert session.controller.paused
     assert not session.collision.contacts
+    assert session.interaction.telemetry.result is None and 'peg_session_result' not in scene
+    assert not session.interaction.telemetry.events and sum(session.interaction.telemetry.paths.values())==0
     keys=check_modal_events()
     build_peg_transfer()
     assert fingerprint()==initial,'Regeneration differs'
@@ -129,6 +155,8 @@ def main():
                 pivot_error_metres=baseline.maximum_pivot_error,pivot_tolerance_metres=baseline.PIVOT_TOLERANCE,
                 initial_intersections='NONE',camera_framing='PASS',keyboard_bindings=keys,
                 collision_checks='Every trial tick: capsules + held-ring board clearance; evaluated tool vertices at each move; reset clears contacts',
+                telemetry_checks='PASS: exact event totals, monotonic timing, pause exclusion, positive tool paths, JSON snapshot, HUD, reset isolation',
+                containment_checks='PASS: all working capsules and held-ring support inside board/camera planes each tick; camera projection checked at each move',
                 deterministic_scene_sha256=initial,previous_scene_hashes_preserved={p.name:h for p,h in old.items()},base_mesh_polygons=polygons)
     out=ROOT/'outputs/peg_transfer';out.mkdir(parents=True,exist_ok=True)
     (out/'validation.json').write_text(json.dumps(report,indent=2)+'\n')

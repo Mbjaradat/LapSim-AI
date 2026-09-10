@@ -1,5 +1,8 @@
 # Peg transfer MVP checkpoint
 
+Phase 4 adds objective in-memory session metrics and a completion summary; see
+[definitions and session tests](phase4.md). Reset clears the previous result.
+
 Phase 3.1 adds palm-centre steering and lightweight board/tool collision safety.
 See [Phase 3.1 behavior and manual checks](phase3_1.md); the existing scene opens
 unchanged and updated scripts activate the constraints. The original limitations

@@ -68,10 +68,22 @@ class LiveSession:
             self.interaction = PegInteraction()
             from lapsim_ai.simulator.collision import CollisionConstraint, CollisionSettings
             from config import TROCARS, SHAFT_RADIUS
-            from peg_config import BOARD_TOP, RING_THICKNESS
+            from peg_config import BOARD_TOP, BOARD_CENTER, BOARD_DIMENSIONS, RING_THICKNESS, RING_RADIUS
+            from lapsim_ai.simulator.containment import trainer_planes
+            from lapsim_ai.simulator.collision import transform
+            scene=bpy.context.scene; camera=scene.camera
+            frame=camera.data.view_frame(scene=scene)
+            basis=camera.matrix_world.to_3x3()
+            ceiling=max(TROCARS[s][2]+transform(p,(0,0,-p.insertion))[2] for s,p in DEFAULTS.items())+2*JAW_LENGTH
+            planes=trainer_planes(BOARD_CENTER,BOARD_DIMENSIONS,BOARD_TOP,ceiling,
+                tuple(camera.matrix_world.translation),tuple(-basis.col[2]),tuple(basis.col[0]),tuple(basis.col[1]),
+                max(abs(v.x/v.z) for v in frame),max(abs(v.y/v.z) for v in frame))
             self.collision = CollisionConstraint(TROCARS,LIMITS,CollisionSettings(
                 board_height=BOARD_TOP,shaft_radius=SHAFT_RADIUS,jaw_length=JAW_LENGTH,
-                jaw_half_angle=LIVE_JAW_HALF_ANGLE_DEGREES,ring_thickness=RING_THICKNESS))
+                jaw_half_angle=LIVE_JAW_HALF_ANGLE_DEGREES,ring_thickness=RING_THICKNESS,
+                workspace_planes=planes,distal_length=JAW_LENGTH,ring_radius=RING_RADIUS+RING_THICKNESS))
+            if any(self.collision.workspace_gap(s,p,{})< -1e-8 for s,p in DEFAULTS.items()):
+                raise ValueError('Trainer volume/camera excludes neutral working geometry')
         elif bpy.context.scene.get('phase3_interactions', False):
             from phase3_interaction import Phase3Interaction
             self.interaction = Phase3Interaction()
@@ -79,7 +91,7 @@ class LiveSession:
     def update(self, commands, dt):
         previous = self.controller.poses
         self._apply_proposal(previous,self.controller.update(commands, dt))
-        if self.interaction and not self.controller.paused:
+        if self.interaction:
             self._update_interaction(dt)
 
     def _apply_proposal(self, previous, proposed):
@@ -91,8 +103,8 @@ class LiveSession:
 
     def _update_interaction(self, dt):
         if bpy.context.scene.get('peg_transfer_config'):
-            self.interaction.update(self.controller.poses, dt)
-        else:
+            self.interaction.update(self.controller.poses, dt, paused=self.controller.paused)
+        elif not self.controller.paused:
             self.interaction.update(self.controller.poses)
 
     def reset(self):
@@ -106,5 +118,5 @@ class LiveSession:
     def update_targets(self, targets, dt):
         previous = self.controller.poses
         self._apply_proposal(previous,self.controller.update_targets(targets, dt))
-        if self.interaction and not self.controller.paused:
+        if self.interaction:
             self._update_interaction(dt)

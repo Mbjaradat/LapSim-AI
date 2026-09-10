@@ -86,6 +86,9 @@ class LAPSIM_OT_webcam(bpy.types.Operator):
         if self._closed:
             return
         self._closed = True
+        session=getattr(self,'session',None)
+        if session and session.interaction and hasattr(session.interaction,'finish'):
+            session.interaction.finish()
         self.startup.stop()
         if self.worker:
             self.worker.stop()
