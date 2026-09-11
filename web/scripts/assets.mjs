@@ -1,0 +1,13 @@
+import {mkdir,cp,readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const model=new URL('../../assets/third_party/mediapipe_hand_landmarker/',import.meta.url);
+const publicDir=new URL('../public/',import.meta.url),modules=new URL('../node_modules/',import.meta.url);
+await mkdir(new URL('models/',publicDir),{recursive:true});await mkdir(new URL('licenses/',publicDir),{recursive:true});
+const bytes=await readFile(new URL('hand_landmarker.task',model));
+if(createHash('sha256').update(bytes).digest('hex')!=='fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1')throw Error('Reference model checksum mismatch');
+for(const file of ['hand_landmarker.task','SOURCE.json','LICENSE.txt'])await cp(new URL(file,model),new URL('models/'+file,publicDir));
+await cp(new URL('@mediapipe/tasks-vision/wasm/',modules),new URL('wasm/',publicDir),{recursive:true});
+const three=JSON.parse(await readFile(new URL('three/package.json',modules),'utf8'));const mp=JSON.parse(await readFile(new URL('@mediapipe/tasks-vision/package.json',modules),'utf8'));
+const notices=`LapSim-AI browser runtime dependencies\n\nthree ${three.version} — MIT — https://github.com/mrdoob/three.js\n\n${await readFile(new URL('three/LICENSE',modules),'utf8')}\n\nMediaPipe Tasks Vision ${mp.version} and Hand Landmarker model — Google / MediaPipe — Apache-2.0\nhttps://github.com/google-ai-edge/mediapipe\nModel source and checksum: models/SOURCE.json\nNo modifications to model or WASM binaries.\n\n${await readFile(new URL('LICENSE.txt',model),'utf8')}`;
+await writeFile(new URL('licenses/dependencies.txt',publicDir),notices);
+console.log('Local model checksum verified; WASM and runtime notices prepared.');

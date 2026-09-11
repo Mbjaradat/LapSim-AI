@@ -30,6 +30,25 @@ license grant.
 
 ## Admission process
 
+### Browser MVP runtime additions (2026-09-10)
+
+| Item | Source / rights holder | License and shipped notices | Modification / review |
+| --- | --- | --- | --- |
+| three 0.186.0, pinned in web/pnpm-lock.yaml | https://github.com/mrdoob/three.js / three.js authors | MIT; installed package LICENSE copied into generated dist/licenses/dependencies.txt | Bundled/minified by Vite; upstream source unchanged; package license inspected |
+| @mediapipe/tasks-vision 1.0.1, including packaged WASM variants, pinned in web/pnpm-lock.yaml | https://github.com/google-ai-edge/mediapipe / Google and MediaPipe contributors | Apache-2.0; Apache text included in generated dist/licenses/dependencies.txt, inline packaged notices retained | JS bundled; WASM copied unchanged; package license and upstream license checked |
+| Existing Hand Landmarker model and provenance record | Existing registered model above | SOURCE.json and LICENSE.txt copied alongside checksum-verified model in dist/models | No new model download; no modifications |
+
+`web/scripts/assets.mjs` generates the notices and verifies the model SHA-256 before
+development/build. The lockfile records exact npm distributions and integrity
+hashes. Vite/TypeScript/tsx/Playwright and their development dependencies are local
+build/test tools, not shipped application modules. Three.js and MediaPipe are the
+two bundled runtime packages. No downloaded visual assets or fonts were added;
+the browser trainer uses original procedural geometry and system fonts. Public
+distribution still requires the existing original-license decision; this register
+does not grant a license to the project's original code.
+
+### Procedure
+
 1. Verify terms at the original source and record author, source URL, version, and checksum.
 2. Preserve the applicable license text under `assets/third_party/<item>/` for assets, or alongside vendored code, and link it here.
 3. Record modifications explicitly, including “none” where applicable.

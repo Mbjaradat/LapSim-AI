@@ -2,6 +2,12 @@
 
 An experimental educational and research prototype for webcam-controlled laparoscopic simulation, planned for public open-source release.
 
+**Browser MVP:** the additive [web application](web/README.md) now runs the trainer,
+camera, guided calibration, Peg Transfer and results on one page without a native
+runtime. See the [implementation report, local commands and manual webcam test](docs/web-mvp.md).
+Automated web/native checks pass; physical browser webcam validation remains pending.
+The native Blender implementation below is preserved as the reference.
+
 The primary MVP is a **peg-transfer box trainer**. A laptop webcam tracks both hands and controls two virtual instruments in Blender through software-enforced trocar/fulcrum constraints. Previous cholecystectomy/anatomy work remains a reference checkpoint.
 
 **Status: Peg-transfer MVP implemented — awaiting manual evaluation.** Six rings,
