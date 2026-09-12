@@ -1,8 +1,14 @@
-# LapSim-AI
+## LapSim-AI v0.1.0 — Research Preview
 
-**Phase 6.2B: PRIVACY BLOCKER RESOLVED LOCALLY — PRODUCTION CHECK PENDING.** Worker-response CSP containment is implemented and verified in production preview. Internal metrics collection remains present. The actual Vercel response and >75-second runtime check remain required before publication. See [containment and deployment verification](docs/worker_network_containment.md).
+**Live demo:** https://lapsim-ai.live
 
-Experimental webcam-controlled virtual laparoscopic skills trainer, under active development for educational and research use. **Target: v0.1.0 — Research Preview. Publication remains blocked by the specific distribution/release checks below.** Original maintainer-owned work is licensed under Apache-2.0; third parties retain their own terms.
+LapSim-AI is an experimental webcam-controlled virtual laparoscopic skills trainer developed for educational and research exploration. It uses an ordinary RGB webcam and calibrated hand motion to control virtual laparoscopic instruments.
+
+The browser version processes webcam frames, hand landmarks, calibration data, and training-session results locally. MediaPipe Tasks Vision contains internal usage/performance metrics logic; LapSim-AI's production Content Security Policy (CSP) prevents its worker from transmitting metrics to the external MediaPipe metrics endpoint when the configured policy is served and enforced.
+
+> **Research disclaimer:** LapSim-AI has not been clinically validated, is not a certified medical device, and is not a replacement for supervised surgical training. It must not be used for patient care or clinical decision-making.
+ 
+ Original maintainer-owned work is licensed under Apache-2.0; third parties retain their own terms.
 
 LapSim-AI explores an accessible way to interact with virtual laparoscopic instruments using an ordinary RGB webcam and calibrated hand motion. It requires no stereo/depth camera, VR controller, hand-mounted controller or physical laparoscopic instrument. It provides no haptic feedback.
 
