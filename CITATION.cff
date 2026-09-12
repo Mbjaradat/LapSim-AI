@@ -1,6 +1,7 @@
 # Creator and original-material license confirmed by maintainer on 2026-09-12.
 # Third-party material retains separate terms; see docs/licensing.md.
-# date-released remains omitted until publication; no DOI exists.
+# DOI reserved through Zenodo for the v0.1.0 research preview.
+
 cff-version: 1.2.0
 message: "Please cite this software using these metadata after v0.1.0 is published."
 type: software
@@ -10,8 +11,9 @@ authors:
     given-names: "Mohammad"
 license: Apache-2.0
 repository-code: "https://github.com/Mbjaradat/LapSim-AI"
-url: "https://github.com/Mbjaradat/LapSim-AI"
+url: "https://lapsim-ai.live"
 version: "0.1.0"
+doi: "10.5281/zenodo.22724948"
 abstract: >-
   Experimental single-RGB-webcam virtual laparoscopic practice software with
   calibrated hand tracking, separated motion channels, fixed-trocar mechanics,
