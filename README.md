@@ -120,7 +120,7 @@ LapSim-AI is experimental educational/research software, not a certified medical
 
 ## Citation, license and release record
 
-Use [CITATION.cff](CITATION.cff), with maintainer-confirmed creator Mohammad Jaradat, when citing the released software. Version 0.1.0 is the intended release; its date is not finalized. **DOI:10.5281/zenodo.22724948** [Archival instructions](docs/archival_readiness.md), [draft release notes](docs/release_notes_v0.1.0.md), [changelog](CHANGELOG.md) and [release checklist](docs/release_checklist.md) prepare manual publication.
+Use [CITATION.cff](CITATION.cff), with maintainer-confirmed creator Mohammad Jaradat, when citing the released software. Version 0.1.0 is the intended release; its date-released: "2026-09-12". **DOI:10.5281/zenodo.22724948** [Archival instructions](docs/archival_readiness.md), [draft release notes](docs/release_notes_v0.1.0.md), [changelog](CHANGELOG.md) and [release checklist](docs/release_checklist.md) prepare manual publication.
 
 Copyright 2026 Mohammad Jaradat. Original maintainer-owned source, documentation and procedural assets are licensed under [Apache-2.0](LICENSE); see [NOTICE](NOTICE). Creator and ownership were explicitly confirmed by the maintainer. Third-party/derived material retains its terms. MediaPipe WASM notices, native Blender source/scenes and historical anatomy distribution treatment are recorded in the [licensing audit](docs/licensing.md), [inventory](docs/release_inventory.md) and [release checklist](docs/release_checklist.md).
 
