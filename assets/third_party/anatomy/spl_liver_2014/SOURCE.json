@@ -133,5 +133,13 @@
       "vertices": 26147,
       "triangles": 51704
     }
-  ]
+  ],
+  "release_review": {
+    "date": "2026-09-12",
+    "required_for_beginner_trainer": false,
+    "source_vtk_origin": "THIRD-PARTY",
+    "phase3b_origin": "DERIVED",
+    "recommended_treatment": "Exclude ten VTK files and combined Phase 3B anatomy scene from minimal v0.1.0 artifact. They may remain in the public source repository with the existing provenance/license records and embedded Phase 3B notice.",
+    "if_distributed": "Retain original terms, required preface, all Part B and applicable Part C, creator/institution attribution, source provenance and modification notices; make no Apache-only or endorsement claim."
+  }
 }

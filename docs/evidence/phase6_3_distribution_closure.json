@@ -1,0 +1,51 @@
+{
+  "phase": "6.3",
+  "date": "2026-09-12",
+  "verdict": "READY AFTER MANUAL PRE-PUBLICATION CHECKS",
+  "mediapipe_tasks_vision": {
+    "version": "1.0.1",
+    "package_license": "Apache-2.0",
+    "npm_tarball_sha1": "7ab992e2415d48e526934abd6390ffc208699fb1",
+    "npm_tarball_integrity": "sha512-rvRE2FmAZ6ZxKSw7wq+e+jQDpN3t1B/tD2mJz9SmAzb1msoDkd4dMoE4wAh8Z30Um0PQwLiHr9QtomhmXk3aUQ==",
+    "runtime_dependencies": 0,
+    "package_license_or_notice_files": [],
+    "distributed_wasm_files": 6,
+    "required_notice_files": [
+      "web/public/licenses/mediapipe-NOTICES.txt",
+      "web/public/licenses/mediapipe-upstream-LICENSE.txt"
+    ],
+    "status": "CLEAR",
+    "provenance_limit": "Published npm metadata has no gitHead or release-specific component SBOM; no additional or omitted license was evidenced."
+  },
+  "blender": {
+    "original_artwork": "CLEAR — creator-owned Apache-2.0",
+    "api_scripts": "CLEAR — original Apache-2.0 source, compatible with GPLv3",
+    "blend_files": "CLEAR — creator-selected terms plus inherited SPL terms for Phase 3B",
+    "application": "EXCLUDED — separately installed GPL-3.0-or-later Blender"
+  },
+  "historical_anatomy": {
+    "public_repository": "CLEAR with full Slicer terms, required preface, attribution, provenance and modification notice",
+    "minimal_artifact": "EXCLUDE ten VTK files and derived Phase 3B scene"
+  },
+  "removed": [
+    "forcing-vs-convincing/.gitignore",
+    "forcing-vs-convincing/.npmrc",
+    "forcing-vs-convincing/package.json",
+    "forcing-vs-convincing/pnpm-lock.yaml",
+    "forcing-vs-convincing/pnpm-workspace.yaml",
+    "forcing-vs-convincing/tsconfig.json"
+  ],
+  "focused_validation": {
+    "production_build_for_notice_packaging": "PASS",
+    "public_to_dist_notice_hashes": "PASS",
+    "mediapipe_js_wasm_hashes": "PASS",
+    "model_hashes": "PASS",
+    "ten_spl_vtk_hashes": "PASS",
+    "json_provenance_parse": "PASS",
+    "scaffold_absent_and_active_reference_check": "PASS",
+    "simulator_control_task_source_unchanged": "PASS",
+    "citation_validation": "NOT RERUN — CITATION.cff unaffected; prior validation remains applicable",
+    "git_diff_check": "PASS"
+  },
+  "publication_actions": []
+}

@@ -1,10 +1,13 @@
 [project]
 name = "lapsim-ai"
-version = "0.0.0"
+version = "0.1.0"
 description = "Experimental educational and research laparoscopic simulation prototype"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{name = "Mohammad Jaradat"}]
 dependencies = []
 
-# Phase 0: no installation/build workflow yet. License metadata is pending
-# maintainer approval. Revisit supported Python versions with CV dependencies.
+# Native webcam environment is recorded in requirements-native.txt; see docs/development.md.
+# License covers original maintainer-owned material; see docs/licensing.md for mixed components.
+# Python >=3.11 is metadata; the recorded webcam environment is 3.12.10.

@@ -1,5 +1,7 @@
 # Beginner Free Transfer polish
 
+For current Phase 6 tests, qualitative physical browser observation, licensing blockers and release status, see [release evidence](release_evidence_v0.1.0.md). Earlier acceptance notes below are historical.
+
 The public default is now **Beginner Free Transfer**, replacing the structured
 six-ring completion rule in the public UI. The original `PegTransfer` and default
 `Session()` structured mode remain intact internally for parity tests/future

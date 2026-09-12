@@ -1,5 +1,7 @@
 # Phase 5 — guided hands-free native UX
 
+Phase 6 reran the native guided modal and peg verifiers successfully; see [current evidence](release_evidence_v0.1.0.md). The maintainer-reported browser usability trial does not close the native physical acceptance checklist below.
+
 Implemented, with automated regression checks passing. **Physical webcam and
 solo hands-free acceptance remain pending.** No scene rebuild is required.
 Restart Blender to load the updated scripts. No commit, push or release was made.

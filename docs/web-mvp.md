@@ -1,5 +1,7 @@
 # Browser Web MVP implementation and acceptance report
 
+Phase 6 status: this is a historical report. Current reruns and the separate maintainer-reported physical browser observation are in [release evidence](release_evidence_v0.1.0.md); the old pending status below records that earlier checkpoint.
+
 Historical structured MVP baseline. The subsequent [Beginner polish patch](web-beginner-polish.md)
 updates the public task, visuals, research link and current test count; the native
 parity baseline below is retained.

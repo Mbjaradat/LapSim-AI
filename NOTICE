@@ -1,0 +1,15 @@
+LapSim-AI
+Copyright 2026 Mohammad Jaradat
+
+Original LapSim-AI source, documentation and original procedural assets owned
+by Mohammad Jaradat are licensed under the Apache License, Version 2.0.
+The canonical license is in LICENSE. Component scope and distribution review
+are documented in docs/licensing.md and docs/release_inventory.md.
+
+Third-party and derived material is not relicensed by this notice. Preserve
+its original terms and attribution; see THIRD_PARTY_LICENSES.md. Blender is a
+separately installed GPL-3.0-or-later application and is not bundled.
+
+Special thanks to Ahmad Jaradat for generously providing access to his high-performance laptop, which supported the development, testing, and validation of LapSim-AI.
+
+This is equipment-support acknowledgement only, not authorship or ownership.

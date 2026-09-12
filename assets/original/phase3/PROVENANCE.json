@@ -2,14 +2,30 @@
   "name": "LapSim-AI Phase 3 procedural environment and training beads",
   "origin": "Original repository-authored procedural geometry; AI-assisted development with user review pending",
   "creators": "LapSim-AI project contributors (Codex-assisted)",
-  "source": ["blender/scripts/build_phase3.py", "blender/scripts/phase3_config.py", "blender/scripts/scene.py"],
+  "source": [
+    "blender/scripts/build_phase3.py",
+    "blender/scripts/phase3_config.py",
+    "blender/scripts/scene.py"
+  ],
   "generated_scene": "blender/scenes/lapsim_ai_phase3.blend",
-  "components": ["liver", "gallbladder", "duct-like continuation", "cavity", "training beads", "optional reach clouds"],
+  "components": [
+    "liver",
+    "gallbladder",
+    "duct-like continuation",
+    "cavity",
+    "training beads",
+    "optional reach clouds"
+  ],
   "external_geometry_or_reference_assets": [],
   "textures": "None",
   "method": "Original analytic deformation of primitives and original lathed profile; no tracing or downloaded anatomy",
-  "license_status": "Original code and generated asset distribution terms pending maintainer approval; no new license grant",
+  "license_status": "Apache-2.0 for original maintainer-owned material only; third-party/derived parts retain inherited terms",
   "third_party_separation": "Existing MediaPipe model is separate; see THIRD_PARTY_LICENSES.md and its SOURCE.json",
   "generated_intermediates": "outputs/phase3/workspace.json and validation.json; excluded from source control",
-  "validation_status": "Engineering checks only; manual visual and ergonomic validation pending"
+  "validation_status": "Engineering checks only; manual visual and ergonomic validation pending",
+  "copyright_holder": "Mohammad Jaradat",
+  "copyright_year": 2026,
+  "software_creator": "Mohammad Jaradat",
+  "maintainer_confirmation": "2026-09-12: original project procedural assets owned by maintainer and included in Apache-2.0 grant; third-party and derived assets excluded",
+  "license": "Apache-2.0"
 }

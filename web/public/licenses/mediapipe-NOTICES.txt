@@ -1,0 +1,24 @@
+MediaPipe Tasks Vision 1.0.1 — distribution notices
+
+Package declares Apache-2.0. See mediapipe-upstream-LICENSE.txt for the
+upstream license preserved with this distribution, including its additional
+Lucent notice. That upstream master text is not a version-specific binary SBOM.
+
+The installed vision_bundle.mjs.map contains these attributions:
+
+Copyright The Closure Library Authors.
+SPDX-License-Identifier: Apache-2.0
+
+Copyright Google LLC
+SPDX-License-Identifier: Apache-2.0
+
+These source-map notices are retained here because the minified JavaScript
+does not contain the corresponding comment blocks. Vite bundles/minifies
+JavaScript for LapSim-AI; package source and WASM bytes are not patched.
+
+The official npm package does not include a separate LICENSE/NOTICE file or a
+release-specific WASM component manifest. Its package metadata declares the
+distribution Apache-2.0 with zero runtime dependencies. Exact npm integrity,
+artifact hashes and the remaining source-commit/SBOM provenance limit are in
+assets/third_party/mediapipe_tasks_vision/SOURCE.json and
+THIRD_PARTY_LICENSES.md in the source distribution.

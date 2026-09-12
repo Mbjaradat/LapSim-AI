@@ -1,0 +1,762 @@
+{
+  "phase": "6.2",
+  "date": "2026-09-11",
+  "browser": "Chrome 152.0.7977.84 (Windows), headless; Playwright 1.63.0",
+  "verdict": "REMEDIATION AVAILABLE — MAINTAINER APPROVAL REQUIRED",
+  "scope": "Investigation only; no application/dependency/deployment changes",
+  "sourceCommit": "244134707f511d1d943ccb910af58404c3316dda",
+  "privacy": "Fake camera only; all nonlocal network requests intercepted; API keys and HTTP headers not retained; payload wire fields contain test-only timing/counters.",
+  "instrumentation": "Context routing aborts external requests. Test-only response CSP is injected only into worker script responses. Production uses a passive Worker message observer. Final CSP case additionally forwards fetch unchanged while recording endpoint/outcome and listens for worker securitypolicyviolation. Development session gate/task state set via existing dev seam; inference remains real fake-camera inference.",
+  "initialExploratoryRun": "Concurrent attempt ended with readiness timeout before 60 seconds; excluded from completed tests. Sequential replacement runs passed.",
+  "successfulGoogleTransmission": "NOT TESTED; prevented by harness or enforced CSP",
+  "workerPolicy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'",
+  "applicationSourceHashes": {
+    "comparedTo": "docs/evidence/phase6_checks.json",
+    "checked": 95,
+    "mismatches": []
+  },
+  "artifactHashes": {
+    "web/node_modules/@mediapipe/tasks-vision/vision_bundle.mjs": "d885630c297c0b20b1fe86096cb06291c4c8080876f27852e724f24ac603713f",
+    "web/dist/assets/hand-worker-CFdBzOHs.js": "94471389acbb1864febd9d42ccb60ea026b820ed4c4b3732fe799c8fa3b88526",
+    "outputs/phase6_2/version_0.10.35.mjs": "55d7ab624fbb70dcc5adc4ae6d7ea9cfcb569139d3dbfbf2b1deafcb966bc0fe",
+    "outputs/phase6_2/runtime.mjs": "af0ca3333d2d8fe2298cd577698cad49ab5dc58098e471ad38dd120510086558",
+    "outputs/phase6_2/production.mjs": "16df65ee2346cfb0f97c3f763cda634fcd0a2a96c634eaa9e893163ebedbfdea",
+    "outputs/phase6_2/csp-proof.mjs": "75e8ad8e9773efe1aa4a4e367b63f01ba610dabc009265f6e5f111792cc6bf5b"
+  },
+  "tests": {
+    "completedTimedCases": 7,
+    "minimumObservationSeconds": 75.028,
+    "assertions": "PASS",
+    "applicationUnitTestsTypecheckBuild": "Not rerun in Phase 6.2: application source unchanged; existing production build tested and hash recorded."
+  },
+  "repositoryVisibility": {
+    "repository": "Mbjaradat/LapSim-AI",
+    "visibility": "private",
+    "verifiedBy": "GitHub read-only repository metadata connector during Phase 6.2"
+  },
+  "development": {
+    "base": "http://127.0.0.1:5173",
+    "environment": "Headless Chrome, fake video, software WebGL; no physical webcam",
+    "externalPolicy": "All nonlocal requests intercepted and aborted; no metrics intentionally sent to Google",
+    "cases": [
+      {
+        "name": "idle",
+        "workers": 0,
+        "requests": [],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 771,
+        "durationSeconds": 75.028,
+        "final": {
+          "camera": "OFF",
+          "task": "READY",
+          "activeSeconds": 0,
+          "observationAgeSeconds": null,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      },
+      {
+        "name": "init_only",
+        "workers": 1,
+        "requests": [
+          {
+            "elapsedSeconds": 61.343,
+            "method": "POST",
+            "destination": "https://odml.pa.googleapis.com/v1/log",
+            "blockedBy": "test harness (before external transmission)",
+            "payloadBytes": 39,
+            "payloadSha256": "2bfc06088016ae379cd7c428301b6cafe061f381aeadc41eae766cfe34b2a0f3",
+            "payloadWireStructure": [
+              {
+                "field": 2,
+                "wire": 0,
+                "value": "1786"
+              },
+              {
+                "field": 3,
+                "wire": 2,
+                "bytes": 34,
+                "children": [
+                  {
+                    "field": 6,
+                    "wire": 2,
+                    "bytes": 32,
+                    "children": [
+                      {
+                        "field": 1,
+                        "wire": 2,
+                        "bytes": 17,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 5,
+                            "textClass": "NUMERIC_VERSION",
+                            "text": "1.0.1"
+                          },
+                          {
+                            "field": 5,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 6,
+                            "wire": 0,
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "field": 2,
+                        "wire": 2,
+                        "bytes": 11,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "10"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 5,
+                            "children": [
+                              {
+                                "field": 1,
+                                "wire": 0,
+                                "value": "12"
+                              },
+                              {
+                                "field": 3,
+                                "wire": 0,
+                                "value": "3501"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 4859,
+        "durationSeconds": 75.051,
+        "initialized": true,
+        "final": {
+          "camera": "OFF",
+          "task": "READY",
+          "activeSeconds": 0,
+          "observationAgeSeconds": null,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      },
+      {
+        "name": "active_baseline",
+        "workers": 1,
+        "requests": [
+          {
+            "elapsedSeconds": 62.354,
+            "method": "POST",
+            "destination": "https://odml.pa.googleapis.com/v1/log",
+            "blockedBy": "test harness (before external transmission)",
+            "payloadBytes": 90,
+            "payloadSha256": "57d863874b3740c3e6a58379efeab313d9cd3e99693e563a28cd11ddb7ea39c5",
+            "payloadWireStructure": [
+              {
+                "field": 2,
+                "wire": 0,
+                "value": "1786"
+              },
+              {
+                "field": 3,
+                "wire": 2,
+                "bytes": 34,
+                "children": [
+                  {
+                    "field": 6,
+                    "wire": 2,
+                    "bytes": 32,
+                    "children": [
+                      {
+                        "field": 1,
+                        "wire": 2,
+                        "bytes": 17,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 5,
+                            "textClass": "NUMERIC_VERSION",
+                            "text": "1.0.1"
+                          },
+                          {
+                            "field": 5,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 6,
+                            "wire": 0,
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "field": 2,
+                        "wire": 2,
+                        "bytes": 11,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "10"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 5,
+                            "children": [
+                              {
+                                "field": 1,
+                                "wire": 0,
+                                "value": "12"
+                              },
+                              {
+                                "field": 3,
+                                "wire": 0,
+                                "value": "3854"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "field": 3,
+                "wire": 2,
+                "bytes": 49,
+                "children": [
+                  {
+                    "field": 6,
+                    "wire": 2,
+                    "bytes": 47,
+                    "children": [
+                      {
+                        "field": 1,
+                        "wire": 2,
+                        "bytes": 17,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 5,
+                            "textClass": "NUMERIC_VERSION",
+                            "text": "1.0.1"
+                          },
+                          {
+                            "field": 5,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 6,
+                            "wire": 0,
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "field": 2,
+                        "wire": 2,
+                        "bytes": 26,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "10"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 0,
+                            "value": "1"
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 20,
+                            "children": [
+                              {
+                                "field": 1,
+                                "wire": 0,
+                                "value": "12"
+                              },
+                              {
+                                "field": 4,
+                                "wire": 0,
+                                "value": "289"
+                              },
+                              {
+                                "field": 5,
+                                "wire": 0,
+                                "value": "450"
+                              },
+                              {
+                                "field": 6,
+                                "wire": 0,
+                                "value": "30180"
+                              },
+                              {
+                                "field": 7,
+                                "wire": 0,
+                                "value": "0"
+                              },
+                              {
+                                "field": 8,
+                                "wire": 2,
+                                "bytes": 4,
+                                "children": [
+                                  {
+                                    "field": 1,
+                                    "wire": 0,
+                                    "value": "3"
+                                  },
+                                  {
+                                    "field": 2,
+                                    "wire": 0,
+                                    "value": "91"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 6480,
+        "durationSeconds": 75.042,
+        "initialized": true,
+        "syntheticTaskRunning": true,
+        "final": {
+          "camera": "ON · LOCAL",
+          "task": "RUNNING",
+          "activeSeconds": 75.2096,
+          "observationAgeSeconds": 0.35710000000000264,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      },
+      {
+        "name": "active_worker_csp",
+        "workers": 1,
+        "requests": [],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 5319,
+        "durationSeconds": 75.028,
+        "workerCspApplied": true,
+        "initialized": true,
+        "syntheticTaskRunning": true,
+        "final": {
+          "camera": "ON · LOCAL",
+          "task": "RUNNING",
+          "activeSeconds": 75.1748,
+          "observationAgeSeconds": 0.39490000000004954,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      }
+    ]
+  },
+  "production": {
+    "base": "http://127.0.0.1:4173",
+    "environment": "Headless Chrome, fake video, software WebGL; no physical webcam",
+    "externalPolicy": "All nonlocal requests intercepted and aborted; no metrics intentionally sent to Google",
+    "cases": [
+      {
+        "name": "active_baseline",
+        "workers": 1,
+        "requests": [
+          {
+            "elapsedSeconds": 63.906,
+            "method": "POST",
+            "destination": "https://odml.pa.googleapis.com/v1/log",
+            "blockedBy": "test harness (before external transmission)",
+            "payloadBytes": 90,
+            "payloadSha256": "dddee5013cbcfc05b5d90fabfcccd3c364f184aa8250b2291a1e9e2025cfa7ba",
+            "payloadWireStructure": [
+              {
+                "field": 2,
+                "wire": 0,
+                "value": "1786"
+              },
+              {
+                "field": 3,
+                "wire": 2,
+                "bytes": 34,
+                "children": [
+                  {
+                    "field": 6,
+                    "wire": 2,
+                    "bytes": 32,
+                    "children": [
+                      {
+                        "field": 1,
+                        "wire": 2,
+                        "bytes": 17,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 5,
+                            "textClass": "NUMERIC_VERSION",
+                            "text": "1.0.1"
+                          },
+                          {
+                            "field": 5,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 6,
+                            "wire": 0,
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "field": 2,
+                        "wire": 2,
+                        "bytes": 11,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "10"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 5,
+                            "children": [
+                              {
+                                "field": 1,
+                                "wire": 0,
+                                "value": "12"
+                              },
+                              {
+                                "field": 3,
+                                "wire": 0,
+                                "value": "4420"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "field": 3,
+                "wire": 2,
+                "bytes": 49,
+                "children": [
+                  {
+                    "field": 6,
+                    "wire": 2,
+                    "bytes": 47,
+                    "children": [
+                      {
+                        "field": 1,
+                        "wire": 2,
+                        "bytes": 17,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "0"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 3,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 5,
+                            "textClass": "NUMERIC_VERSION",
+                            "text": "1.0.1"
+                          },
+                          {
+                            "field": 5,
+                            "wire": 2,
+                            "bytes": 0,
+                            "children": []
+                          },
+                          {
+                            "field": 6,
+                            "wire": 0,
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "field": 2,
+                        "wire": 2,
+                        "bytes": 26,
+                        "children": [
+                          {
+                            "field": 1,
+                            "wire": 0,
+                            "value": "10"
+                          },
+                          {
+                            "field": 2,
+                            "wire": 0,
+                            "value": "1"
+                          },
+                          {
+                            "field": 4,
+                            "wire": 2,
+                            "bytes": 20,
+                            "children": [
+                              {
+                                "field": 1,
+                                "wire": 0,
+                                "value": "12"
+                              },
+                              {
+                                "field": 4,
+                                "wire": 0,
+                                "value": "232"
+                              },
+                              {
+                                "field": 5,
+                                "wire": 0,
+                                "value": "472"
+                              },
+                              {
+                                "field": 6,
+                                "wire": 0,
+                                "value": "30151"
+                              },
+                              {
+                                "field": 7,
+                                "wire": 0,
+                                "value": "0"
+                              },
+                              {
+                                "field": 8,
+                                "wire": 2,
+                                "bytes": 4,
+                                "children": [
+                                  {
+                                    "field": 1,
+                                    "wire": 0,
+                                    "value": "3"
+                                  },
+                                  {
+                                    "field": 2,
+                                    "wire": 0,
+                                    "value": "113"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 8840,
+        "durationSeconds": 75.057,
+        "initialized": true,
+        "final": {
+          "camera": "ON · LOCAL",
+          "observationAgeSeconds": null,
+          "inferenceResults": 281,
+          "inferenceAgeMs": 314.30000000004657,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      },
+      {
+        "name": "active_worker_csp",
+        "workers": 1,
+        "requests": [],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 5921,
+        "durationSeconds": 75.041,
+        "workerCspApplied": true,
+        "initialized": true,
+        "final": {
+          "camera": "ON · LOCAL",
+          "observationAgeSeconds": null,
+          "inferenceResults": 274,
+          "inferenceAgeMs": 159.80000000004657,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        }
+      }
+    ]
+  },
+  "cspProof": {
+    "base": "http://127.0.0.1:4173",
+    "environment": "Headless Chrome, fake video, software WebGL; no physical webcam",
+    "externalPolicy": "All nonlocal requests intercepted and aborted; no metrics intentionally sent to Google",
+    "cases": [
+      {
+        "name": "active_worker_csp",
+        "workers": 1,
+        "requests": [],
+        "console": [],
+        "pageErrors": [],
+        "startedMs": 8265,
+        "durationSeconds": 75.046,
+        "workerCspApplied": true,
+        "initialized": true,
+        "final": {
+          "camera": "ON · LOCAL",
+          "observationAgeSeconds": null,
+          "inferenceResults": 281,
+          "inferenceAgeMs": 239.0999999998603,
+          "researchUrl": "https://forms.gle/Jz6Wva2JEVHcomc36"
+        },
+        "workerEvidence": [
+          {
+            "fetches": [
+              {
+                "destination": "https://odml.pa.googleapis.com/v1/log",
+                "method": "POST",
+                "workerElapsedMs": 60369.10000000009,
+                "rejectedWith": "TypeError"
+              }
+            ],
+            "violations": [
+              {
+                "blockedURI": "https://odml.pa.googleapis.com/v1/log",
+                "effectiveDirective": "connect-src",
+                "disposition": "enforce"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

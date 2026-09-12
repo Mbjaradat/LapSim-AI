@@ -1,0 +1,26 @@
+{
+  "project": "LapSim-AI procedural instrument rig and trainer environment",
+  "origin": "ORIGINAL",
+  "source": [
+    "blender/scripts/scene.py",
+    "blender/scripts/mechanics.py",
+    "blender/scripts/config.py",
+    "web/src/renderer.ts",
+    "web/src/grasper.ts"
+  ],
+  "components": [
+    "trainer enclosure/grid",
+    "shaft",
+    "jaws",
+    "handle",
+    "trocar markers",
+    "procedural browser grasper"
+  ],
+  "method": "Repository-authored Blender/Three.js primitives, transforms and materials; no imported mesh or texture",
+  "history": "Initial foundation da3087c; trocar mechanics 2f8eb88; browser implementation 2441347",
+  "copyright_holder": "Mohammad Jaradat",
+  "copyright_year": 2026,
+  "license": "Apache-2.0",
+  "confirmation": "Explicit maintainer ownership/grant confirmation 2026-09-12",
+  "boundary": "Original assets only; Blender remains separately installed GPL-3.0-or-later software and external software licenses remain separate"
+}

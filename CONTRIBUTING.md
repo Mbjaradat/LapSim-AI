@@ -1,6 +1,6 @@
 # Contributing
 
-The repository is in Phase 0. Discuss changes against the roadmap before expanding scope. License selection must be resolved before accepting outside code contributions or a public release.
+Original maintainer-owned LapSim-AI material is licensed under Apache-2.0. Confirm authority and compatible terms for contributions; third-party/derived material retains its own terms. The release distribution checks in docs/licensing.md remain distinct from the original-material grant. Discuss scope before expanding the project.
 
 ## Workflow
 

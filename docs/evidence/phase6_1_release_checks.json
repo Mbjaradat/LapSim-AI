@@ -1,0 +1,1038 @@
+{
+  "date": "2026-09-12",
+  "phase": "resumed 6.1",
+  "verdict": "NOT READY — BLOCKERS REMAIN",
+  "canonical_license": {
+    "status": "PASS",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "metadata": "PASS: original-material Apache-2.0; Mohammad Jaradat; 2026; v0.1.0",
+  "citation": {
+    "status": "PASS",
+    "schema": "CFF 1.2.0",
+    "schema_sha256": "0b8d22140da702d766df318dcff3a91af2f39521298dcf36d76315fd99cc169b",
+    "creator_confirmed": true,
+    "doi_or_release_date_invented": false
+  },
+  "acknowledgement": "PASS exact text",
+  "provenance": {
+    "status": "PASS",
+    "original_records": 5,
+    "model_hash": "PASS",
+    "spl_vtk_hashes": 10
+  },
+  "notices": {
+    "available_text_preservation": "PASS",
+    "wasm_hashes": "PASS",
+    "exact_wasm_notice_completeness": "REVIEW REQUIRED; no release-specific manifest/source mapping supplied"
+  },
+  "source_behavior": {
+    "changed": false,
+    "hashes_checked": 95,
+    "behavior_mismatches": [],
+    "metadata_only_changes": [
+      "web/package.json"
+    ]
+  },
+  "tracked_binary_wheels_executables_libraries": [],
+  "scaffold": {
+    "verdict": "SAFE TO REMOVE FROM LAPSIM-AI REPOSITORY",
+    "tracked_files": [
+      "forcing-vs-convincing/.gitignore",
+      "forcing-vs-convincing/.npmrc",
+      "forcing-vs-convincing/package.json",
+      "forcing-vs-convincing/pnpm-lock.yaml",
+      "forcing-vs-convincing/pnpm-workspace.yaml",
+      "forcing-vs-convincing/tsconfig.json"
+    ],
+    "deleted": false
+  },
+  "ignore_checks": [
+    ".venv/",
+    "outputs/",
+    "web/node_modules/",
+    "web/dist/",
+    "forcing-vs-convincing/node_modules/",
+    "blender/scenes/test.blend1"
+  ],
+  "privacy": "RESOLVED LOCALLY — VERCEL PRODUCTION CHECK PENDING; prior evidence reused",
+  "engineering_tests": "NOT RERUN",
+  "inventory": [
+    {
+      "path": ".gitattributes",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": ".gitignore",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "AUTHORS.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "CITATION.cff",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "LICENSE",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "NOTICE",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "README.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "THIRD_PARTY_LICENSES.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/browser/PROVENANCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/instruments/PROVENANCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/peg_transfer/PROVENANCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/phase3/PROVENANCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/original/phase3b/PROVENANCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/LICENSE.txt",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_10_LiverSegment_III.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_12_LiverSegment_VI.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_15_LiverSegment_IVa.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_17_LiverSegment_IVb.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_18_LiverSegment_I.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_24_LiverSegment_V.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_26_LiverSegment_VII.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_33_LiverSegment_VIII.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_40_Gallbladder.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/Model_9_LiverSegment_II.vtk",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "assets/third_party/anatomy/spl_liver_2014/SOURCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/mediapipe_hand_landmarker/LICENSE.txt",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/mediapipe_hand_landmarker/SOURCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/mediapipe_hand_landmarker/hand_landmarker.task",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "assets/third_party/mediapipe_tasks_vision/SOURCE.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scenes/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scenes/lapsim_ai_peg_transfer.blend",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scenes/lapsim_ai_phase1a.blend",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scenes/lapsim_ai_phase1b.blend",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scenes/lapsim_ai_phase3.blend",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scenes/lapsim_ai_phase3b.blend",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended nonessential historical-anatomy artifact exclusion; not removed"
+    },
+    {
+      "path": "blender/scripts/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/build_peg_transfer.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/build_phase1a.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/build_phase1b.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/build_phase3.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/build_phase3b.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/config.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/demo.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/live_rig.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/live_ui.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/mechanics.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/peg_config.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/peg_interaction.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/phase3_config.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/phase3_interaction.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/phase3b_config.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/scene.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/spl_assets.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "blender/scripts/start_live.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/start_webcam.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_peg_transfer.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_phase1a.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_phase1b.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_phase2d.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_phase3.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/verify_phase5.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "blender/scripts/webcam_ui.py",
+      "classification": "REVIEW REQUIRED",
+      "reason": "native combined-distribution review; original grant preserved"
+    },
+    {
+      "path": "docs/architecture.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/archival_readiness.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/development.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/evidence/phase6_1_release_checks.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/evidence/phase6_2_privacy.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/evidence/phase6_2b_containment.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/evidence/phase6_checks.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/licensing.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/mediapipe_privacy_investigation.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/peg_transfer.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase1a.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase2b.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase2c.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase2d.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase3.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase3_1.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase3b_asset_audit.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase4.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase5.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/phase6_1_stop_report.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/privacy_research.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/release_audit.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/release_checklist.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/release_evidence_v0.1.0.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/release_inventory.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/release_notes_v0.1.0.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/technical_method.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/validation_phase1a.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/web-architecture.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/web-beginner-polish.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/web-mvp.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/worker_network_containment.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "docs/workspace_containment.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "forcing-vs-convincing/.gitignore",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "forcing-vs-convincing/.npmrc",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "forcing-vs-convincing/package.json",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "forcing-vs-convincing/pnpm-lock.yaml",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "forcing-vs-convincing/pnpm-workspace.yaml",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "forcing-vs-convincing/tsconfig.json",
+      "classification": "EXCLUDE / GENERATED",
+      "reason": "recommended independent-scaffold exclusion; not removed"
+    },
+    {
+      "path": "pyproject.toml",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "requirements-native.txt",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/controller.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/hand_mapping.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/instrument.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/keyboard.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/public_runtime.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/public_setup.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/settings.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/webcam_bridge.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/control/webcam_startup.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/scoring/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/collision.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/containment.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/grasp.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/tasks/peg_transfer.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/simulator/workspace.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/telemetry/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/telemetry/session.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/vision/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/vision/hand_state.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/vision/palm_orientation.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/vision/stabilization.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "src/lapsim_ai/vision/webcam_demo.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/.gitkeep",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_collision.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_containment.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_hand_mapping.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_hand_stabilization.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_instrument_control.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_live_controller.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_palm_depth.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_palm_roll.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_palm_steering.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_peg_transfer.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_phase3_grasp.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_phase3_workspace.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_public_setup.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_session_telemetry.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_webcam_ergonomics.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_webcam_integration.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_webcam_readiness.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "tests/test_webcam_startup.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/.env.example",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/.gitignore",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/README.md",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/fixtures/native.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/index.html",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/package.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/pnpm-lock.yaml",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/pnpm-workspace.yaml",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/public/licenses/mediapipe-NOTICES.txt",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/public/licenses/mediapipe-upstream-LICENSE.txt",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/scripts/assets.mjs",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/scripts/browser-smoke.mjs",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/scripts/generate_fixtures.py",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/scripts/privacy-network.mjs",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/app.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/beginner.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/camera.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/config.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/core.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/grasper.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/hand-worker.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/renderer.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/session.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/setup.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/style.css",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/synthetic.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/task.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/telemetry.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/src/tracking.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/tests/beginner.test.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/tests/parity.test.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/tsconfig.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/vercel.json",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    },
+    {
+      "path": "web/vite.config.ts",
+      "classification": "INCLUDE",
+      "reason": "source/documentation/provenance or required model; inherited third-party terms retained"
+    }
+  ],
+  "direct_browser_packages": [
+    {
+      "name": "@mediapipe/tasks-vision",
+      "version": "1.0.1",
+      "license": "Apache-2.0",
+      "role": "dependencies"
+    },
+    {
+      "name": "three",
+      "version": "0.186.0",
+      "license": "MIT",
+      "role": "dependencies"
+    },
+    {
+      "name": "@types/node",
+      "version": "26.5.0",
+      "license": "MIT",
+      "role": "devDependencies"
+    },
+    {
+      "name": "@types/three",
+      "version": "0.185.4",
+      "license": "MIT",
+      "role": "devDependencies"
+    },
+    {
+      "name": "playwright",
+      "version": "1.63.0",
+      "license": "Apache-2.0",
+      "role": "devDependencies"
+    },
+    {
+      "name": "tsx",
+      "version": "4.23.13",
+      "license": "MIT",
+      "role": "devDependencies"
+    },
+    {
+      "name": "typescript",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "role": "devDependencies"
+    },
+    {
+      "name": "vite",
+      "version": "8.2.2",
+      "license": "MIT",
+      "role": "devDependencies"
+    }
+  ],
+  "git_diff_check": "PASS (run separately)"
+}

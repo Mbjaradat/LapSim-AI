@@ -29,7 +29,7 @@ pnpm preview
 ```
 
 Preview is http://127.0.0.1:4173. Serve the complete `dist` folder over HTTPS in
-production. No deployment has been performed. Physical webcam validation is pending.
+production. No deployment has been performed in Phase 6. The maintainer reports a positive physical browser usability impression; detailed device/protocol evidence remains pending. See [current release evidence](../docs/release_evidence_v0.1.0.md).
 
 The research-interest link defaults to the provided Google Form. To override it,
 copy `.env.example` to `.env`, set
@@ -37,3 +37,7 @@ copy `.env.example` to `.env`, set
 invalid value explicitly disables the link. An unset variable uses the default.
 Never place secrets in VITE
 variables: they are public build-time configuration.
+
+## Worker network containment
+
+MediaPipe 1.0.1 internal metrics collection remains present. The worker response CSP blocks its external metrics connection. `vercel.json` applies the policy to `/assets/:path*`; Vite development/preview reads the same policy value. Use Vercel Root Directory `web`, build `pnpm build`, output `dist`, with parent model assets available during the build. An arbitrary static server does not automatically apply these headers. See [configuration and mandatory post-deployment checks](../docs/worker_network_containment.md). Local containment is verified; no Vercel deployment has been performed.

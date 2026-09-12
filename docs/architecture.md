@@ -1,5 +1,7 @@
 # Intended architecture
 
+Historical design/checkpoint document. The implemented native/browser pipeline and current telemetry are documented in [technical method](technical_method.md) and the [README architecture figure](../README.md#architecture). References to future telemetry below describe the earlier checkpoint.
+
 Phase 1/2 implement the independent controller, fixed-trocar Blender rig and
 standalone webcam pipeline/loopback bridge. Phase 3 adds a workspace-derived
 procedural environment and optional rigid-token grasp adapter. Telemetry,

@@ -1,0 +1,29 @@
+{
+  "project": "LapSim-AI browser trainer",
+  "audit_date": "2026-09-11",
+  "source": [
+    "web/src/renderer.ts",
+    "web/src/grasper.ts",
+    "web/src/style.css",
+    "web/index.html"
+  ],
+  "origin": "Repository-authored procedural Three.js primitives/materials and HTML/CSS UI; no external visual asset imports found in source inspection",
+  "components": [
+    "board",
+    "pegs",
+    "rings",
+    "instruments",
+    "materials",
+    "labels"
+  ],
+  "fonts_icons": "System fonts and text/CSS symbols; no imported font or icon asset files",
+  "external_runtime_dependencies": "Three.js and MediaPipe are separately licensed dependencies, not original code/assets",
+  "creator_status": "Mohammad Jaradat, explicitly confirmed by maintainer",
+  "license_status": "Apache-2.0 for original maintainer-owned material only; third-party/derived parts retain inherited terms",
+  "limitations": "Source inspection supports procedural origin; it is not an independent forensic originality determination",
+  "copyright_holder": "Mohammad Jaradat",
+  "copyright_year": 2026,
+  "software_creator": "Mohammad Jaradat",
+  "maintainer_confirmation": "2026-09-12: original project procedural assets owned by maintainer and included in Apache-2.0 grant; third-party and derived assets excluded",
+  "license": "Apache-2.0"
+}

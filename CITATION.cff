@@ -1,0 +1,28 @@
+# Creator and original-material license confirmed by maintainer on 2026-09-12.
+# Third-party material retains separate terms; see docs/licensing.md.
+# date-released remains omitted until publication; no DOI exists.
+cff-version: 1.2.0
+message: "Please cite this software using these metadata after v0.1.0 is published."
+type: software
+title: "LapSim-AI v0.1.0 — Research Preview"
+authors:
+  - family-names: "Jaradat"
+    given-names: "Mohammad"
+license: Apache-2.0
+repository-code: "https://github.com/Mbjaradat/LapSim-AI"
+url: "https://github.com/Mbjaradat/LapSim-AI"
+version: "0.1.0"
+abstract: >-
+  Experimental single-RGB-webcam virtual laparoscopic practice software with
+  calibrated hand tracking, separated motion channels, fixed-trocar mechanics,
+  deterministic interactions and descriptive telemetry in native and browser
+  implementations. Clinical validity and training effectiveness are not established.
+keywords:
+  - laparoscopic simulation
+  - hand tracking
+  - computer vision
+  - webcam
+  - medical education
+  - MediaPipe
+  - Three.js
+  - Blender

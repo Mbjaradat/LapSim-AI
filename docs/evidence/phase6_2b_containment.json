@@ -1,0 +1,107 @@
+{
+  "phase": "6.2B",
+  "reviewDate": "2026-09-12",
+  "verdict": "PRIVACY BLOCKER RESOLVED LOCALLY — PRODUCTION CHECK PENDING",
+  "continuation": "Saved completed timed test inspected; not rerun. Production smoke completed after restarting preview; initial continuation attempt had connection refused.",
+  "unitTests": {
+    "passed": 36,
+    "failed": 0
+  },
+  "typecheck": "PASS",
+  "productionBuild": "PASS",
+  "productionSmoke": {
+    "checks": [
+      "Landing, Start CTA, scene canvas, GitHub and configured research CTA",
+      "Real browser camera API with fake device; local worker/model/WASM; blank-frame inference",
+      "Stop ends all camera tracks",
+      "Production has no development synthetic seam",
+      "Root refresh",
+      "Small-layout guidance",
+      "Simulated permission denial is actionable/retryable",
+      "Simulated missing camera is actionable/retryable",
+      "No page errors; same-origin GET assets only; no uploads"
+    ],
+    "errors": []
+  },
+  "sourceIdentity": {
+    "checked": 95,
+    "mismatches": []
+  },
+  "hashes": {
+    "web/vercel.json": "c145225464d252735fd4fa192277c56f2d7a904aa57163a592af46946356ea6f",
+    "web/vite.config.ts": "582d1201927767ee0c86b95acb21f0c2084c7e36baabbde811c65b0a54094f61",
+    "web/scripts/privacy-network.mjs": "7c5354e1edad92792c28011285749037e93f304fa849688255a6c6e1375439b9",
+    "web/dist/assets/hand-worker-CFdBzOHs.js": "94471389acbb1864febd9d42ccb60ea026b820ed4c4b3732fe799c8fa3b88526",
+    "web/package.json": "0999915188325dfada46a7857b2e0ac15d681847ab3201a1ea533228f071dfa9",
+    "web/pnpm-lock.yaml": "8858b17d784fd56b85ef1d002bb082eeed0f68a1050930fcf5fef58c1b36a131"
+  },
+  "network": {
+    "base": "http://127.0.0.1:4173",
+    "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'",
+    "headerInjection": false,
+    "externalRequests": [],
+    "resources": [
+      {
+        "path": "/assets/hand-worker-CFdBzOHs.js",
+        "status": 200,
+        "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'"
+      },
+      {
+        "path": "/wasm/vision_wasm_module_internal.wasm",
+        "status": 200,
+        "csp": null
+      },
+      {
+        "path": "/models/hand_landmarker.task",
+        "status": 200,
+        "csp": null
+      }
+    ],
+    "pageErrors": [],
+    "browser": "152.0.7977.84",
+    "researchLink": {
+      "href": "https://forms.gle/Jz6Wva2JEVHcomc36",
+      "target": "_blank",
+      "rel": "noreferrer"
+    },
+    "workerPath": "/assets/hand-worker-CFdBzOHs.js",
+    "workerResponse": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'"
+    },
+    "initialResults": 2,
+    "durationSeconds": 80.056,
+    "worker": {
+      "fetches": [
+        {
+          "destination": "https://odml.pa.googleapis.com/v1/log",
+          "method": "POST",
+          "workerElapsedMs": 61009.69999999995,
+          "rejectedWith": "TypeError"
+        }
+      ],
+      "violations": [
+        {
+          "blockedURI": "https://odml.pa.googleapis.com/v1/log",
+          "directive": "connect-src",
+          "disposition": "enforce"
+        }
+      ]
+    },
+    "final": {
+      "results": 333,
+      "lastResultMs": 88014.3999999999,
+      "inferenceAgeMs": 33.300000000046566,
+      "camera": "ON · LOCAL",
+      "guidance": "Show both hands · waiting for camera",
+      "practiceTime": "02:00 remaining · starts on first grasp"
+    },
+    "resultsAfterBlock": 340,
+    "status": "PASS"
+  },
+  "vercelDeployment": "NOT PERFORMED; actual worker header and >75-second production verification pending",
+  "repositoryVisibility": "private (read-only GitHub metadata verified)",
+  "simulatorBehaviorChanges": false,
+  "dependencyVersion": "@mediapipe/tasks-vision 1.0.1",
+  "gitDiffCheck": "PASS"
+}
