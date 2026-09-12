@@ -14,6 +14,7 @@ repository-code: "https://github.com/Mbjaradat/LapSim-AI"
 url: "https://lapsim-ai.live"
 version: "0.1.0"
 doi: "10.5281/zenodo.22724948"
+date-released: "2026-09-12"
 abstract: >-
   Experimental single-RGB-webcam virtual laparoscopic practice software with
   calibrated hand tracking, separated motion channels, fixed-trocar mechanics,
