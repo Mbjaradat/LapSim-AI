@@ -3,7 +3,7 @@
 # DOI reserved through Zenodo for the v0.1.0 research preview.
 
 cff-version: 1.2.0
-message: "Please cite this software using these metadata after v0.1.0 is published."
+message: "Please cite this software using these metadata"
 type: software
 title: "LapSim-AI v0.1.0 — Research Preview"
 authors:
