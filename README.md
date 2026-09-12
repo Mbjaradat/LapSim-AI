@@ -1,5 +1,7 @@
 ## LapSim-AI v0.1.0 — Research Preview
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22724948.svg)](https://doi.org/10.5281/zenodo.22724948)
+
 **Live demo:** https://lapsim-ai.live
 
 LapSim-AI is an experimental webcam-controlled virtual laparoscopic skills trainer developed for educational and research exploration. It uses an ordinary RGB webcam and calibrated hand motion to control virtual laparoscopic instruments.
