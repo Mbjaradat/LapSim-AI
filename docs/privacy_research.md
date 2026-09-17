@@ -20,6 +20,10 @@ The native implementation is different: local OpenCV preview and token-checked l
 
 LapSim-AI processes webcam frames locally and does not upload webcam frames, hand landmarks, calibration data or training-session results. MediaPipe Tasks Vision performs hand-landmark inference locally. The bundled dependency contains internal usage/performance metrics logic; LapSim-AI applies a browser Content Security Policy to prevent the worker from transmitting metrics to its external metrics endpoint. This blocks transmission, not internal collection, when the configured response policy is served and enforced. The optional Research Interest form is separate and receives no automatic simulator results. Hosting providers may retain ordinary request logs.
 
+**Website analytics:** LapSim-AI uses Vercel Web Analytics to measure aggregate website usage, such as page views and visitor counts. Website analytics are separate from the simulator's webcam and training-session processing. Webcam frames, hand landmarks, calibration data and simulator training-session results are not sent to Vercel Web Analytics by LapSim-AI.
+
+Vercel may process limited technical information required to provide analytics and hosting services in accordance with its own privacy documentation. LapSim-AI does not use Vercel Web Analytics to collect webcam content or training-session performance data.
+
 The reviewed metrics builders receive counters and timing values, not frames, landmarks, calibration or simulator results. Phase 6.2B verified an attempted POST rejected by enforced worker `connect-src`, with no external request reaching the harness guard and continued inference. This evidence applies to the configured local production preview, not every host or browser. The deployment check remains mandatory.
 
 ## Research interest registry
