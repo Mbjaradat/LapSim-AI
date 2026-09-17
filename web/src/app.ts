@@ -1,4 +1,5 @@
 import './style.css';
+import {inject} from '@vercel/analytics';
 import {projectLinks,externalResearchUrl} from './config';
 import {TrainerView} from './renderer';
 import {Session} from './session';
@@ -6,6 +7,8 @@ import {sides,type V} from './core';
 import {homeDirection} from './setup';
 import {cameraError,stopStream} from './camera';
 import type {Raw} from './tracking';
+
+inject();
 const el=<T extends HTMLElement>(id:string)=>document.getElementById(id) as T;
 const video=el<HTMLVideoElement>('video'),overlay=el<HTMLCanvasElement>('overlay'),start=el<HTMLButtonElement>('start'),pause=el<HTMLButtonElement>('pause'),retry=el<HTMLButtonElement>('retry'),recalibrate=el<HTMLButtonElement>('recalibrate'),stop=el<HTMLButtonElement>('stop'),select=el<HTMLSelectElement>('camera-select');
 const researchUrl=externalResearchUrl(projectLinks.researchInterest);
