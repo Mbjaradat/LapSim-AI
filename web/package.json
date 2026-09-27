@@ -16,6 +16,7 @@
   "dependencies": {
     "@mediapipe/tasks-vision": "1.0.1",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "three": "0.186.0"
   },
   "devDependencies": {
