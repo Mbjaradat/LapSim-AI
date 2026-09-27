@@ -1,0 +1,41 @@
+# Vercel Speed Insights Installation
+
+Successfully installed and configured Vercel Speed Insights for the LapSim-AI project.
+
+## Changes Made
+
+### 1. Package Installation
+- Installed `@vercel/speed-insights` version 2.0.0 using pnpm
+- Updated `package.json` to include the new dependency
+- Updated `pnpm-lock.yaml` with the new package and its dependencies
+
+### 2. Code Integration
+Modified `web/src/app.ts`:
+- Added import statement: `import {injectSpeedInsights} from '@vercel/speed-insights';`
+- Called `injectSpeedInsights()` function immediately after the existing `inject()` call for analytics
+- This follows the same pattern as the existing Vercel Analytics integration
+
+## Implementation Details
+
+This project uses Vite with vanilla TypeScript (not React). According to the official Vercel Speed Insights documentation, for non-framework projects, the `injectSpeedInsights()` function should be used to add the tracking script to the app.
+
+The function was added in `web/src/app.ts` at line 12, immediately after the analytics injection, ensuring Speed Insights is initialized when the application starts.
+
+## Verification
+
+All verification steps completed successfully:
+- ✅ TypeScript type checking passed (`pnpm typecheck`)
+- ✅ Build completed successfully (`pnpm build`)
+- ✅ All 36 tests passed (`pnpm test`)
+- ✅ No linting errors or warnings introduced
+
+## Framework Detection
+
+This is a Vite-based project using vanilla TypeScript, not a React, Vue, or other framework-specific setup. The implementation correctly uses the vanilla JavaScript/TypeScript approach with the `injectSpeedInsights()` function from `@vercel/speed-insights`.
+
+## Notes
+
+- Speed Insights will not track data in development mode (this is intentional behavior)
+- Data will start flowing once the app is deployed to Vercel
+- The integration follows the same pattern as the existing Vercel Analytics setup
+- All existing code structure was preserved, only adding the necessary Speed Insights import and initialization
